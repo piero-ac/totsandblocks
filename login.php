@@ -18,7 +18,7 @@
         die("Please enter password first!");
 
     // SQL statement to check user login info
-    $users_sql = "select * from totsandblocks.Users where login = '$user'"; // do not compare passwords
+    $users_sql = "select * from totsandblocks.Users where username = '$user'"; // do not compare passwords
     $users_results = mysqli_query($con, $users_sql);
 
     if($users_results){ // check if result is false (something wrong with query)

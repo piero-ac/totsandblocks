@@ -65,7 +65,7 @@
                     <main id="actions">
                         <section id="stock-actions">
                             <h2>Manage Stock</h2>
-                            <p>Click below to View, Search, or Update Stock Information</p>
+                            <p>Click below to Search or Update Stock Information</p>
                             <form action="stock_actions.php" method="POST">
                                 <input type="hidden" name="customer_name" value="$name">
                                 <input type="submit" value="Manage Stock">

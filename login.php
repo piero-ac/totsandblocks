@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
 <?php
     include "dbconfig.php";
 
@@ -50,7 +59,7 @@
                 ##### Display user info #####
                 echo "<h2>Welcome $fname $lname</h2>"; 
                 echo "<p>Position: $position </p>";
-                echo "<hr />";
+                echo "<hr />";  
 
             } else {
                 echo "<h1>Login $user exists, but password does not match</h1>"; // 1.3
@@ -60,6 +69,38 @@
     } else {
         echo "Something is wrong with SQL: " . mysqli_error($con);
     }
-
-
 ?>
+<main id="actions">
+    <section id="stock-actions">
+        <div>
+            <h2>Check Stock</h2> 
+            <p>Click below to Search for Item Stock</p> 
+        </div>
+        <div>
+            <h2>Update Stock</h2> 
+            <p>Click below to Update Quantity of Item Stock</p>
+        </div>
+        <div>
+            <h2>Add Stock</h2>
+            <p>Click below to Add Stock</p>
+        </div>
+    </section>
+    <section id="items-actions">
+        <div>
+            <h2>Add Items</h2>
+            <p>Click below to Add New Items</p>
+        </div>
+        <div>
+            <h2>Delete Items</h2>
+            <p>Click below to Delete Old/Unused Items</p>
+        </div>
+    </section>
+</main>
+<?php
+ mysqli_close($con);
+?>
+</body>
+</html>
+
+
+

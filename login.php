@@ -54,48 +54,42 @@
                 ##### Obtain user info #####
                 $fname = $user_row['fName'];
                 $lname = $user_row['lName'];
+                $name = $fname . " " . $lname;
                 $position = $user_row['position'];
 
                 ##### Display user info #####
-                echo "<h2>Welcome $fname $lname</h2>"; 
+                echo "<h2>Welcome $name </h2>"; 
                 echo "<p>Position: $position </p>";
                 echo "<hr />";  
-
+                echo <<<HTML
+                    <main id="actions">
+                        <section id="stock-actions">
+                            <h2>Manage Stock</h2>
+                            <p>Click below to View, Search, or Update Stock Information</p>
+                            <form action="stock_actions.php" method="POST">
+                                <input type="hidden" name="customer_name" value="$name">
+                                <input type="submit" value="Manage Stock">
+                            </form>
+                        </section>
+                        <section id="items-actions">
+                            <h2>Manage Items</h2>
+                            <p>Click below to Add or Delete Items</p>
+                            <p>*Items need to be added before entering the items stock information*</p>
+                            <form action="item_actions.php" method="POST">
+                                <input type="hidden" name="customer_name" value="$name">
+                                <input type="submit" value="Manage Items">
+                            </form>
+                        </section>
+                    </main>
+                HTML;
             } else {
                 echo "<h1>Login $user exists, but password does not match</h1>"; // 1.3
             }
-        }
-
+        } 
     } else {
         echo "Something is wrong with SQL: " . mysqli_error($con);
     }
 ?>
-<main id="actions">
-    <section id="stock-actions">
-        <div>
-            <h2>Check Stock</h2> 
-            <p>Click below to Search for Item Stock</p> 
-        </div>
-        <div>
-            <h2>Update Stock</h2> 
-            <p>Click below to Update Quantity of Item Stock</p>
-        </div>
-        <div>
-            <h2>Add Stock</h2>
-            <p>Click below to Add Stock</p>
-        </div>
-    </section>
-    <section id="items-actions">
-        <div>
-            <h2>Add Items</h2>
-            <p>Click below to Add New Items</p>
-        </div>
-        <div>
-            <h2>Delete Items</h2>
-            <p>Click below to Delete Old/Unused Items</p>
-        </div>
-    </section>
-</main>
 <?php
  mysqli_close($con);
 ?>

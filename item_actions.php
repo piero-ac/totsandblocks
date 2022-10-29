@@ -7,6 +7,5 @@
     <title>Manage Items</title>
 </head>
 <body>
-    
 </body>
 </html>

@@ -21,7 +21,7 @@
       or die("<br>Cannot connect to DB:$dbname on $host, error: " . mysqli_connect_errno());
 
     $user_id = $_COOKIE['userID'];
-    echo "<h1>Manage Items</h1>";
+    echo "<h1>Manage Stock</h1>";
     echo "<hr>";
 
     echo "<h2>Search Stock Information</h2>";
@@ -29,7 +29,7 @@
 ?>
 <p> 
 Item Name: 
-<select name="item_name" id="">
+<select name="item_name_search" id="">
     <option value="*">ALL</option>
     <?php
     //get the item names from items table
@@ -51,7 +51,7 @@ Item Name:
 </p>
 </p>
 Item Location: 
-<select name="item_location">
+<select name="item_location_search">
     <option value="*">ALL</option>
     <?php
     //get the item names from items table
@@ -73,6 +73,7 @@ Item Location:
 </p>
 <input type="submit" value="Search Stock">
 </form>
+<hr>
 <?php
 mysqli_close($con);
 ?>

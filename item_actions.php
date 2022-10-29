@@ -24,6 +24,8 @@
     echo "<h1>Manage Items</h1>";
     echo "<hr>";
 
+    displayItems($con);
+
     echo "<h2>Add Item</h2>";
     echo "<form name='add_item' method='POST'>";
 ?>
@@ -106,7 +108,37 @@ References:
 ?>
 </p>
 <?php
+function displayItems($con){
+    $items_sql = "select i.*, c.categoryName as cName, u.fName as fName from totsandblocks.Item i, totsandblocks.Users u, totsandblocks.Category c";
+    $items_sql = $items_sql . " where c.categoryID = i.itemCategory and u.userID = i.addedBy";
 
+    $items_results = mysqli_query($con, $items_sql);
+    if($items_results){
+        $num_items = mysqli_num_rows($items_results);
+        if($num_items == 0){
+            echo "No items in Item table.";
+        } else {
+            echo "<table border=1>";
+            echo "<tbody>";
+            echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Avg. Cost</th><th>Added By</th><tr>";
+
+            while($items_row = mysqli_fetch_array($items_results)){
+                $itemCode = $items_row['itemCode'];
+                $itemName = $items_row['itemName'];
+                $itemCategory = $items_row['cName'];
+                $itemAvgCost = $items_row['itemAvgCost'];
+                $addedBy = $items_row['fName'];
+                echo "<tr><td>$itemCode</td><td>$itemName</td><td>$itemCategory</td><td>$$itemAvgCost</td><td>$addedBy</td></tr>";
+            }
+
+            echo "</tbody>";
+            echo "</table>";
+        }
+        mysqli_free_result($items_results);
+    } else {
+        echo "Something is wrong with SQL: " . mysqli_error($con);
+    }
+}
 mysqli_close($con);
 ?>
 </body>

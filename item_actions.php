@@ -39,22 +39,9 @@
                     <input type="text" name="item_name" required>
                 </p>
                 <p>Item Category:
-                    <select name="item_location_search">
+                    <select name="item_category">
                         <?php
-                            //get the item names from items table
-                            $category_sql = "select categoryID, categoryName from totsandblocks.Category";
-                            $category_results = mysqli_query($con, $category_sql);
-
-                            if($category_results){
-                                while($category_row = mysqli_fetch_array($category_results)){
-                                    $categoryID = $category_row['categoryID'];
-                                    $categoryName = $category_row['categoryName'];
-                                    echo "<option value='$categoryID'>$categoryName</option>";
-                                }
-                                mysqli_free_result($category_results);
-                            } else {
-                                echo "Something is wrong with SQL: " . mysqli_error($con);
-                            }
+                            getCategories($con);
                         ?>
                     </select>
                 </p>
@@ -65,7 +52,20 @@
                 <p><textarea name="item_description" cols="30" rows="10"></textarea></p>
                 <p><input type="submit" value="Add Item"></p>
                 <?php
-                    $insert_sql; 
+                    if(isset($_POST['item_code'], $_POST['item_name'], $_POST['item_category'], $_POST['item_avgcost'])){
+                        $itemCode = $_POST['item_code'];
+                        $itemName = $_POST['item_name'];
+                        $itemCategory = $_POST['item_category'];
+                        $itemAvgCost = $_POST['item_avgcost'];
+                        $itemDesc = (empty($_POST['item_description'])) ? "Not provided" : $_POST['item_description'];
+
+                        echo "Trying to insert: \n";
+                        echo "Item Code: $itemCode \n";
+                        echo "Item Name: $itemName \n";
+                        echo "Item Category $itemCategory \n";
+                        echo "Avg Cost ($): $itemAvgCost \n";
+                        echo "Description: $itemDesc \n"; 
+                    } 
                 ?>
             </form>
         </div>
@@ -80,20 +80,7 @@
                     <select name="item_delete" id="">
                         <option value=""></option>
                         <?php
-                            //get the item names from items table
-                            $items_sql = "select itemCode, itemName from totsandblocks.Item";
-                            $items_results = mysqli_query($con, $items_sql);
-
-                            if($items_results){
-                                while($items_row = mysqli_fetch_array($items_results)){
-                                    $itemCode = $items_row['itemCode'];
-                                    $itemName = $items_row['itemName'];
-                                    echo "<option value='$itemCode'>$itemName</option>";
-                                }
-                                mysqli_free_result($items_results);
-                            } else {
-                                echo "Something is wrong with SQL: " . mysqli_error($con);
-                            }
+                            getItemNames($con);
                         ?>
                     </select>
                 </p>
@@ -147,6 +134,40 @@
             echo "Something is wrong with SQL: " . mysqli_error($con);
         }
     }
+
+    function getCategories($con){
+        $category_sql = "select categoryID, categoryName from totsandblocks.Category";
+        $category_results = mysqli_query($con, $category_sql);
+
+        if($category_results){
+            while($category_row = mysqli_fetch_array($category_results)){
+                $categoryID = $category_row['categoryID'];
+                $categoryName = $category_row['categoryName'];
+                echo "<option value='$categoryID'>$categoryName</option>";
+            }
+            mysqli_free_result($category_results);
+        } else {
+            echo "Something is wrong with SQL: " . mysqli_error($con);
+        }
+    }
+
+    function getItemNames($con){
+        //get the item names from items table
+        $items_sql = "select itemCode, itemName from totsandblocks.Item";
+        $items_results = mysqli_query($con, $items_sql);
+
+        if($items_results){
+            while($items_row = mysqli_fetch_array($items_results)){
+                $itemCode = $items_row['itemCode'];
+                $itemName = $items_row['itemName'];
+                echo "<option value='$itemCode'>$itemName</option>";
+            }
+            mysqli_free_result($items_results);
+        } else {
+            echo "Something is wrong with SQL: " . mysqli_error($con);
+        }
+    }
+
     mysqli_close($con);
     ?>
 </body>

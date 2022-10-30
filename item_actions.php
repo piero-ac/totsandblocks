@@ -80,15 +80,10 @@
                     </select>
                 </p>
                 <p><input type="submit" value="Check References"></p>
-                <p>References:
-                    <?php 
-                        if(isset($_POST['item_delete']) && !empty($_POST['item_delete'])){
-                            $name = $_POST['item_delete'];
-                            echo "Selected $name";
-                        } else {
-                            echo "Please select an item.";
-                        }
-                    ?>
+                <?php 
+                    $itemCodeToDelete = $_POST['item_delete'];
+                    deleteItem($con, $itemCodeToDelete);
+                ?>
                 </p>
             </form>
         </div>
@@ -180,8 +175,61 @@
 
     }
 
+    function deleteItem($con, $itemCode){
+        // check if $itemCode is in quantity
+        if(empty($itemCode)){
+            echo "<p style='color:blue'> Please select an item</p>";
+            return;
+        }
+        if(itemCodeReferenced($con, $itemCode)){
+            echo "<p style='color:red'>Did not delete item</p>";
+        } else {
+            $delete_sql = "delete from totsandblocks.Item where itemCode = '$itemCode'";
+            $delete_sql = mysqli_query($con, $delete_sql);
+            if($delete_sql){
+                echo "<br>Item Code: ($itemCode) has been deleted successfully.";
+            } else {
+                echo "Something is wrong with deletion SQL: " . mysqli_error($con);
+            }
+        }
+        
+    }
+
+    function itemCodeReferenced($con, $itemCode){
+        $codes_array = getItemCodes($con, "Quantity");
+        if(in_array($itemCode, $codes_array)){
+            echo "<p style='color:red'>Error: Attempting to delete item that is still referenced in Quantity Table.</p>";
+            return true;
+        }
+        return false;
+
+    }
+
     function duplicateCode($con, $itemCode){
-        $codes_sql = "select itemCode from totsandblocks.Item";
+        $codes_array = getItemCodes($con, "Item");
+        if(in_array($itemCode, $codes_array)){
+            echo "<p style='color:red'>Error: Attempting to insert duplicate code.</p>";
+            return true;
+        }
+        return false;
+    }
+
+    function invalidAvgCost($itemAvgCost){
+        $itemAvgCost = (int)$itemAvgCost;
+        if($itemAvgCost < 0){
+            echo "<p style='color:red'>Error: Cannot insert negative value. Enter avg. cost >= $0</p>";
+            return true;
+        }
+        return false;
+    }
+    
+    function getItemCodes($con, $table){
+        if($table == 'Item'){
+            $codes_sql = "select itemCode from totsandblocks.Item";
+        } else  if ($table == 'Quantity'){
+            $codes_sql = "select itemCode from totsandblocks.Quantity";
+        }
+
         $codes_result = mysqli_query($con, $codes_sql);
         $codes_array = array();
 
@@ -200,23 +248,9 @@
             echo "Something wrong with checking codes SQL: " . mysqli_error($con);
         }
 
-        if(in_array($itemCode, $codes_array)){
-            echo "<p style='color:red'>Error: Attempting to insert duplicate code.</p>";
-            return true;
-        }
+        return $codes_array;
 
-        return false;
     }
-
-    function invalidAvgCost($itemAvgCost){
-        $itemAvgCost = (int)$itemAvgCost;
-        if($itemAvgCost < 0){
-            echo "<p style='color:red'>Error: Cannot insert negative value. Enter avg. cost >= $0</p>";
-            return true;
-        }
-        return false;
-    }
-
     mysqli_close($con);
     ?>
 </body>

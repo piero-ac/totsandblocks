@@ -94,15 +94,26 @@
                 <p><input type="submit" value="Update Item" name="btnSubmitUpdate"></p>
                 <?php
                     if(isset($_POST['btnSubmitUpdate'])){
-                        $newItemName = (empty($_POST['new_item_name']) || strlen(trim($_POST['new_item_name']))== 0) ? "Do not update item name" : $_POST['new_item_name'];
-                        $newItemCategory = (empty($_POST['new_item_category'])) ? "Do not update category" : $_POST['new_item_category'];
-                        $newItemAvgCost = (empty($_POST['new_item_avgcost']) || strlen(trim($_POST['new_item_avgcost']))== 0) ? "Do not update cost" : $_POST['new_item_avgcost'];
-                        $newItemDesc = (empty($_POST['new_item_description']) || strlen(trim($_POST['new_item_description']))== 0) ? "Do not update desc" : $_POST['new_item_description'];
+                        $itemCodeToUpdate = $_POST['item_update'];
+                        $newItemName = $_POST['new_item_name'];
+                        $newItemCategory = $_POST['new_item_category'];
+                        $newItemAvgCost = $_POST['new_item_avgcost'];
+                        $newItemDesc = $_POST['new_item_description'];
 
-                        echo "New Item Name: $newItemName <br>";
-                        echo "New Item Category: $newItemCategory <br>";
-                        echo "New Item Avg Cost: $newItemAvgCost <br>";
-                        echo "New Item Desc: $newItemDesc <br>";
+                        if(!empty($itemCodeToUpdate))
+                            updateItem($con, $itemCodeToUpdate, $newItemName, $newItemCategory, $newItemAvgCost, $newItemDesc);
+                        else 
+                            echo "Please select an item first.";
+
+                        // $newItemName = (empty($_POST['new_item_name']) || strlen(trim($_POST['new_item_name']))== 0) ? "Do not update item name" : $_POST['new_item_name'];
+                        // $newItemCategory = (empty($_POST['new_item_category'])) ? "Do not update category" : $_POST['new_item_category'];
+                        // $newItemAvgCost = (empty($_POST['new_item_avgcost']) || strlen(trim($_POST['new_item_avgcost']))== 0) ? "Do not update cost" : $_POST['new_item_avgcost'];
+                        // $newItemDesc = (empty($_POST['new_item_description']) || strlen(trim($_POST['new_item_description']))== 0) ? "Do not update desc" : $_POST['new_item_description'];
+
+                        // echo "New Item Name: $newItemName <br>";
+                        // echo "New Item Category: $newItemCategory <br>";
+                        // echo "New Item Avg Cost: $newItemAvgCost <br>";
+                        // echo "New Item Desc: $newItemDesc <br>";
                     }
                     
                 ?>
@@ -137,6 +148,92 @@
         displayItems($con);
     ?>
     <?php
+
+    function emptyInputs($input){
+        // check if entered input is empty
+        $inputLen = strlen(trim($input));
+        if($inputLen == 0 || empty($input)){
+            return true;
+        }
+        return false;
+    }
+    function updateItem($con, $itemCode, $newItemName, $newItemCategory, $newItemAvgCost, $newItemDesc){
+
+        // get the current information of the item
+        $current_item_info_sql = "select * from totsandblocks.Item where itemCode = '$itemCode'";
+        $current_results = mysqli_query($con, $current_item_info_sql);
+
+        if($current_results){
+            $num_rows = mysqli_num_rows($current_results);
+            if($num_rows == 0){
+                echo "Did not get item's information";
+            } else if ($num_rows > 1){
+                echo "Returned more than one item's information";
+            } else {
+                $item_row = mysqli_fetch_array($current_results);
+                $currentItemName = $item_row['itemName'];
+                $currentItemCategory = $item_row['itemCategory'];
+                $currentAvgCost = $item_row['itemAvgCost'];
+                $currentItemDesc = $item_row['itemDescription'];
+
+                // check if inputs are empty and if they're equal to the current item info
+                if(!emptyInputs($newItemName) && strcmp($currentItemName, $newItemName) != 0){
+                    $update_item_name = "update totsandblocks.Item set itemName = '$newItemName' where itemCode = '$itemCode'";
+                    $update_result = mysqli_query($con, $update_item_name);
+                    if($update_result){
+                        echo "<br>Updated Item Name.";
+                    } else {
+                        echo "Something is wrong with updating item name SQL: " . mysqli_error($con);
+                    }
+                } else {
+                    echo "<br>Did not update item name.";
+                }
+
+                if(!emptyInputs($newItemCategory) && strcmp($currentItemCategory, $newItemCategory) != 0){
+                    $update_item_category = "update totsandblocks.Item set itemCategory = '$newItemCategory' where itemCode = '$itemCode'"; 
+                    $update_result = mysqli_query($con, $update_item_category);
+                    if($update_result){
+                        echo "<br>Updated Item Category.";
+                    } else {
+                        echo "Something is wrong with updating item category SQL: " . mysqli_error($con);
+                    }
+                } else {
+                    echo "<br>Did not update item category.";
+                }
+
+                if(!emptyInputs($newItemAvgCost) && strcmp($currentAvgCost, $newItemAvgCost) != 0){
+                    if(!invalidAvgCost($newItemAvgCost)){
+                        $newItemAvgCost = (int)$newItemAvgCost;
+                        $update_item_avgcost = "update totsandblocks.Item set itemAvgCost = $newItemAvgCost where itemCode = '$itemCode'";
+                        $update_result = mysqli_query($con, $update_item_avgcost);
+                        if($update_result){
+                            echo "<br>Updated Item Avg. Cost.";
+                        } else {
+                            echo "Something is wrong with updating item avg. cost SQL: " . mysqli_error($con);
+                        }
+                    }
+                } else {
+                    echo "<br>Did not update item avg. cost";
+                }
+
+                if(!emptyInputs($newItemDesc) && strcmp($currentItemDesc, $newItemDesc) != 0){
+                    $update_item_description = "update totsandblocks.Item set itemDescription = '$newItemDesc' where itemCode = '$itemCode'";
+                    $update_result = mysqli_query($con, $update_item_description);
+                    if($update_result){
+                        echo "<br>Updated Item Description.";
+                    } else {
+                        echo "Something is wrong with updating item description SQL: " . mysqli_error($con);
+                    }
+                } else {
+                    echo "<br>Did not update item description.";
+                }
+
+            }
+        } else {
+            echo "Something wrong with getting current item's info SQL: " . mysqli_error($con);
+        }
+    }
+
     function displayItems($con){
         $items_sql = "select i.*, c.categoryName as cName, u.fName as fName from totsandblocks.Item i, totsandblocks.Users u, totsandblocks.Category c";
         $items_sql = $items_sql . " where c.categoryID = i.itemCategory and u.userID = i.addedBy";

@@ -94,10 +94,10 @@
                 <p><input type="submit" value="Update Item" name="btnSubmitUpdate"></p>
                 <?php
                     if(isset($_POST['btnSubmitUpdate'])){
-                        $newItemName = (empty($_POST['new_item_name']) || strlen(trim($_POST['new_item_name']) == 0)) ? "Do not update item name" : $_POST['new_item_name'];
+                        $newItemName = (empty($_POST['new_item_name']) || strlen(trim($_POST['new_item_name']))== 0) ? "Do not update item name" : $_POST['new_item_name'];
                         $newItemCategory = (empty($_POST['new_item_category'])) ? "Do not update category" : $_POST['new_item_category'];
-                        $newItemAvgCost = (empty($_POST['new_item_avgcost']) || strlen(trim($_POST['new_item_avgcost']) == 0)) ? "Do not update cost" : $_POST['new_item_avgcost'];
-                        $newItemDesc = (empty($_POST['new_item_description']) || strlen(trim($_POST['new_item_description']) == 0)) ? "Do not update desc" : $_POST['new_item_description'];
+                        $newItemAvgCost = (empty($_POST['new_item_avgcost']) || strlen(trim($_POST['new_item_avgcost']))== 0) ? "Do not update cost" : $_POST['new_item_avgcost'];
+                        $newItemDesc = (empty($_POST['new_item_description']) || strlen(trim($_POST['new_item_description']))== 0) ? "Do not update desc" : $_POST['new_item_description'];
 
                         echo "New Item Name: $newItemName <br>";
                         echo "New Item Category: $newItemCategory <br>";
@@ -120,10 +120,13 @@
                         ?>
                     </select>
                 </p>
-                <p><input type="submit" value="Check References"></p>
+                <p><input type="submit" value="Delete Item" name="btnSubmitDelete"></p>
                 <?php 
-                    $itemCodeToDelete = $_POST['item_delete'];
-                    deleteItem($con, $itemCodeToDelete);
+                    if(isset($_POST['btnSubmitDelete'])){
+                        $itemCodeToDelete = $_POST['item_delete'];
+                        deleteItem($con, $itemCodeToDelete);  
+                    }
+                    
                 ?>
                 </p>
             </form>

@@ -57,14 +57,9 @@
                         $itemName = $_POST['item_name'];
                         $itemCategory = $_POST['item_category'];
                         $itemAvgCost = $_POST['item_avgcost'];
-                        $itemDesc = (empty($_POST['item_description'])) ? "Not provided" : $_POST['item_description'];
+                        $itemDesc = $_POST['item_description'];
 
-                        echo "Trying to insert: \n";
-                        echo "Item Code: $itemCode \n";
-                        echo "Item Name: $itemName \n";
-                        echo "Item Category $itemCategory \n";
-                        echo "Avg Cost ($): $itemAvgCost \n";
-                        echo "Description: $itemDesc \n"; 
+                        insertItem($con, $itemCode, $itemName, $itemCategory, $itemAvgCost, $itemDesc, $user_id);
                     } 
                 ?>
             </form>
@@ -166,6 +161,60 @@
         } else {
             echo "Something is wrong with SQL: " . mysqli_error($con);
         }
+    }
+
+    function insertItem($con, $itemCode, $itemName, $itemCategory, $itemAvgCost, $itemDesc, $user_id){
+        // check if item code is not duplicated or amount entered is not valid input
+        if(duplicateCode($con, $itemCode) || invalidAvgCost($itemAvgCost)){
+            echo "<p style='color:red'>Did not insert item</p>";
+        } else {
+            $itemAvgCost = (int)$itemAvgCost;
+            $insert_sql = "insert into totsandblocks.Item values ('$itemCode', '$itemName', '$itemCategory', $itemAvgCost, '$itemDesc', '$user_id')";
+            $insert_result = mysqli_query($con, $insert_sql);
+            if($insert_result){
+                echo "<br>Item Code: ($itemCode) has been inserted successfully.";
+            } else {
+                echo "Something is wrong with insertion SQL: " . mysqli_error($con);
+            }
+        }
+
+    }
+
+    function duplicateCode($con, $itemCode){
+        $codes_sql = "select itemCode from totsandblocks.Item";
+        $codes_result = mysqli_query($con, $codes_sql);
+        $codes_array = array();
+
+        if($codes_result){
+            $num_codes = mysqli_num_rows($codes_result);
+            if($num_codes == 0){
+                echo "No codes were returned.";
+            } else {
+                while($code_row = mysqli_fetch_array($codes_result)){ 
+                    $code = $code_row['itemCode'];
+                    array_push($codes_array, $code);
+                }
+                mysqli_free_result($codes_result);
+            }
+        } else {
+            echo "Something wrong with checking codes SQL: " . mysqli_error($con);
+        }
+
+        if(in_array($itemCode, $codes_array)){
+            echo "<p style='color:red'>Error: Attempting to insert duplicate code.</p>";
+            return true;
+        }
+
+        return false;
+    }
+
+    function invalidAvgCost($itemAvgCost){
+        $itemAvgCost = (int)$itemAvgCost;
+        if($itemAvgCost < 0){
+            echo "<p style='color:red'>Error: Cannot insert negative value. Enter avg. cost >= $0</p>";
+            return true;
+        }
+        return false;
     }
 
     mysqli_close($con);

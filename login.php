@@ -28,7 +28,7 @@
         // find out the user's username and password
         $user_info_sql = "select * from totsandblocks.Users where userID=$userID";
         $user_result = mysqli_query($con, $user_info_sql);
-        $user_row = mysqli_fetch_array($users_result);
+        $user_row = mysqli_fetch_array($user_result);
         $name = $user_row['fName'] . " " . $user_row['lName'];
         $position = $user_row['position'];
 

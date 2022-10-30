@@ -66,6 +66,32 @@
         </div>
         <div class="update-items-ctn">
             <h2>Update Item</h2>
+            <form name='update_item' method='POST'>
+                <p>Item Name:
+                    <select name="item_update" id="" required>
+                        <option value=""></option>
+                        <?php
+                            getItemNames($con);
+                        ?>
+                    </select>
+                </p>
+                <p>New Item Name:
+                    <input type="text" name="new_item_name">
+                </p>
+                <p>New Category:
+                    <select name="new_item_category">
+                        <?php
+                            getCategories($con);
+                        ?>
+                    </select>
+                </p>
+                <p>New Avg. Cost:
+                    <input type="text" name="new_item_avgcost">
+                </p>
+                <p>New Description:</p>
+                <p><textarea name="new_item_description" cols="30" rows="10"></textarea></p>
+                <p><input type="submit" value="Update Item"></p>
+            </form>
         </div>
         <div class="delete-items-ctn">
             <h2>Delete Item</h2>
@@ -105,15 +131,17 @@
             } else {
                 echo "<table border=1>";
                 echo "<tbody>";
-                echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Avg. Cost</th><th>Added By</th><tr>";
+                echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Avg. Cost</th><th>Description</th><th>Added By</th><tr>";
 
                 while($items_row = mysqli_fetch_array($items_results)){
                     $itemCode = $items_row['itemCode'];
                     $itemName = $items_row['itemName'];
                     $itemCategory = $items_row['cName'];
                     $itemAvgCost = $items_row['itemAvgCost'];
+                    $itemDesc = $items_row['itemDescription'];
                     $addedBy = $items_row['fName'];
-                    echo "<tr><td>$itemCode</td><td>$itemName</td><td>$itemCategory</td><td>$$itemAvgCost</td><td>$addedBy</td></tr>";
+
+                    echo "<tr><td>$itemCode</td><td>$itemName</td><td>$itemCategory</td><td>$$itemAvgCost</td><td>$itemDesc</td><td>$addedBy</td></tr>";
                 }
 
                 echo "</tbody>";

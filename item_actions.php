@@ -45,21 +45,17 @@
                         ?>
                     </select>
                 </p>
-                <p>Average Cost ($):
-                    <input type="text" name="item_avgcost" required>
-                </p>
-                <p>Description (Optional):</p>
-                <p><textarea name="item_description" cols="30" rows="10"></textarea></p>
+                <p>Comment (Optional):</p>
+                <p><textarea name="item_comment" cols="30" rows="10"></textarea></p>
                 <p><input type="submit" value="Add Item"></p>
                 <?php
-                    if(isset($_POST['item_code'], $_POST['item_name'], $_POST['item_category'], $_POST['item_avgcost'])){
+                    if(isset($_POST['item_code'], $_POST['item_name'], $_POST['item_category'])){
                         $itemCode = $_POST['item_code'];
                         $itemName = $_POST['item_name'];
                         $itemCategory = $_POST['item_category'];
-                        $itemAvgCost = $_POST['item_avgcost'];
-                        $itemDesc = $_POST['item_description'];
+                        $itemComment = $_POST['item_comment'];
 
-                        insertItem($con, $itemCode, $itemName, $itemCategory, $itemAvgCost, $itemDesc, $user_id);
+                        insertItem($con, $itemCode, $itemName, $itemCategory, $itemComment, $user_id);
                     } 
                 ?>
             </form>
@@ -86,22 +82,18 @@
                         ?>
                     </select>
                 </p>
-                <p>New Avg. Cost:
-                    <input type="text" name="new_item_avgcost">
-                </p>
-                <p>New Description:</p>
-                <p><textarea name="new_item_description" cols="30" rows="10"></textarea></p>
+                <p>New Comment:</p>
+                <p><textarea name="new_item_comment" cols="30" rows="10"></textarea></p>
                 <p><input type="submit" value="Update Item" name="btnSubmitUpdate"></p>
                 <?php
                     if(isset($_POST['btnSubmitUpdate'])){
                         $itemCodeToUpdate = $_POST['item_update'];
                         $newItemName = $_POST['new_item_name'];
                         $newItemCategory = $_POST['new_item_category'];
-                        $newItemAvgCost = $_POST['new_item_avgcost'];
-                        $newItemDesc = $_POST['new_item_description'];
+                        $newItemComment = $_POST['new_item_comment'];
 
                         if(!empty($itemCodeToUpdate))
-                            updateItem($con, $itemCodeToUpdate, $newItemName, $newItemCategory, $newItemAvgCost, $newItemDesc);
+                            updateItem($con, $itemCodeToUpdate, $newItemName, $newItemCategory, $newItemComment);
                         else 
                             echo "Please select an item first.";
 
@@ -157,7 +149,7 @@
         }
         return false;
     }
-    function updateItem($con, $itemCode, $newItemName, $newItemCategory, $newItemAvgCost, $newItemDesc){
+    function updateItem($con, $itemCode, $newItemName, $newItemCategory, $newItemComment){
 
         // get the current information of the item
         $current_item_info_sql = "select * from totsandblocks.Item where itemCode = '$itemCode'";
@@ -173,8 +165,7 @@
                 $item_row = mysqli_fetch_array($current_results);
                 $currentItemName = $item_row['itemName'];
                 $currentItemCategory = $item_row['itemCategory'];
-                $currentAvgCost = $item_row['itemAvgCost'];
-                $currentItemDesc = $item_row['itemDescription'];
+                $currentItemComment = $item_row['itemDescription'];
 
                 // check if inputs are empty and if they're equal to the current item info
                 if(!emptyInputs($newItemName) && strcmp($currentItemName, $newItemName) != 0){
@@ -201,24 +192,9 @@
                     echo "<br>Did not update item category.";
                 }
 
-                if(!emptyInputs($newItemAvgCost) && strcmp($currentAvgCost, $newItemAvgCost) != 0){
-                    if(!invalidAvgCost($newItemAvgCost)){
-                        $newItemAvgCost = (int)$newItemAvgCost;
-                        $update_item_avgcost = "update totsandblocks.Item set itemAvgCost = $newItemAvgCost where itemCode = '$itemCode'";
-                        $update_result = mysqli_query($con, $update_item_avgcost);
-                        if($update_result){
-                            echo "<br>Updated Item Avg. Cost.";
-                        } else {
-                            echo "Something is wrong with updating item avg. cost SQL: " . mysqli_error($con);
-                        }
-                    }
-                } else {
-                    echo "<br>Did not update item avg. cost";
-                }
-
-                if(!emptyInputs($newItemDesc) && strcmp($currentItemDesc, $newItemDesc) != 0){
-                    $update_item_description = "update totsandblocks.Item set itemDescription = '$newItemDesc' where itemCode = '$itemCode'";
-                    $update_result = mysqli_query($con, $update_item_description);
+                if(!emptyInputs($newItemComment) && strcmp($currentItemComment, $newItemComment) != 0){
+                    $update_item_comment = "update totsandblocks.Item set itemDescription = '$newItemComment' where itemCode = '$itemCode'";
+                    $update_result = mysqli_query($con, $update_item_comment);
                     if($update_result){
                         echo "<br>Updated Item Description.";
                     } else {
@@ -246,17 +222,16 @@
             } else {
                 echo "<table border=1>";
                 echo "<tbody>";
-                echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Avg. Cost</th><th>Description</th><th>Added By</th><tr>";
+                echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Description</th><th>Added By</th><tr>";
 
                 while($items_row = mysqli_fetch_array($items_results)){
                     $itemCode = $items_row['itemCode'];
                     $itemName = $items_row['itemName'];
                     $itemCategory = $items_row['cName'];
-                    $itemAvgCost = $items_row['itemAvgCost'];
                     $itemDesc = $items_row['itemDescription'];
                     $addedBy = $items_row['fName'];
 
-                    echo "<tr><td>$itemCode</td><td>$itemName</td><td>$itemCategory</td><td>$$itemAvgCost</td><td>$itemDesc</td><td>$addedBy</td></tr>";
+                    echo "<tr><td>$itemCode</td><td>$itemName</td><td>$itemCategory</td><td>$itemDesc</td><td>$addedBy</td></tr>";
                 }
 
                 echo "</tbody>";
@@ -301,13 +276,12 @@
         }
     }
 
-    function insertItem($con, $itemCode, $itemName, $itemCategory, $itemAvgCost, $itemDesc, $user_id){
+    function insertItem($con, $itemCode, $itemName, $itemCategory, $itemComment, $user_id){
         // check if item code is not duplicated or amount entered is not valid input
-        if(duplicateCode($con, $itemCode) || invalidAvgCost($itemAvgCost)){
+        if(duplicateCode($con, $itemCode)){
             echo "<p style='color:red'>Did not insert item</p>";
         } else {
-            $itemAvgCost = (int)$itemAvgCost;
-            $insert_sql = "insert into totsandblocks.Item values ('$itemCode', '$itemName', '$itemCategory', $itemAvgCost, '$itemDesc', '$user_id')";
+            $insert_sql = "insert into totsandblocks.Item values ('$itemCode', '$itemName', '$itemCategory', '$itemComment', '$user_id')";
             $insert_result = mysqli_query($con, $insert_sql);
             if($insert_result){
                 echo "<br>Item Code: ($itemCode) has been inserted successfully.";

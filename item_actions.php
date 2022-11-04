@@ -222,7 +222,7 @@
             } else {
                 echo "<table border=1>";
                 echo "<tbody>";
-                echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Description</th><th>Added By</th><tr>";
+                echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Comment</th><th>Added By</th><tr>";
 
                 while($items_row = mysqli_fetch_array($items_results)){
                     $itemCode = $items_row['itemCode'];

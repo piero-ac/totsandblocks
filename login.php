@@ -118,6 +118,14 @@ function displayHomepage($name, $position){
                     <input type="submit" value="Manage Items">
                 </form>
             </section>
+            <section id="view-actions">
+                <h2>View Inventory Information</h2>
+                <p>Click below to View Inventory by Category, Location, etc</p>
+                <form action="view_actions.php">
+                    <input type="hidden" name="customer_name" value="$name">
+                    <input type="submit" value="View Inventory">
+                </form>
+            </section>
         </main>
     HTML;
 }

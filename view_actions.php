@@ -5,6 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View/Print Inventory</title>
+    <script>
+        function printData()
+        {
+            let divToPrint = document.getElementById("printTable");
+            newWin = window.open("");
+            newWin.document.write(divToPrint.outerHTML);
+            newWin.print();
+            newWin.close();
+        }
+    </script>
 </head>
 <body>
     <?php
@@ -54,6 +64,7 @@
                         echo "category: $itemCategory <br>";
                         echo "location: $itemLocation <br>";
                         viewInventory($con, $itemCategory, $itemLocation);
+                        echo "<br><br><button onclick=printData()>Print Table</button>";
                     }
                 ?>
             </form>
@@ -83,7 +94,7 @@ function viewInventory($con, $itemCategory, $itemLocation){
     if($num_items == 0){
         echo "No items in Item table.";
     } else {
-        echo "<table border=1>";
+        echo "<table border=1 cellpadding=3 id='printTable'>";
         echo "<tbody>";
         echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Quantity</th><th>Location</th><tr>";
 

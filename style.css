@@ -5,3 +5,11 @@
     align-items: top;
     justify-content: space-around;
 }
+
+#stock-main {
+    display: flex;
+    flex-flow: row;
+    column-gap: 20px;
+    align-items: top;
+    justify-content: space-around; 
+}

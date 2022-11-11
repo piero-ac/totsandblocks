@@ -19,7 +19,7 @@
         
     ?>
     <a href='login.php'>Back to Homepage</a>
-    <h1>Manage Stock*</h1>
+    <h1>Manage Stock</h1>
     <hr>
     <main id="stock-main" class="side-by-side" >
         <div class="insert-initialstock-ctn">
@@ -91,11 +91,11 @@
                     if(!checkIfComboExistsQuantityTable($itemCode, $itemLocation)){
                         echo "There is no record with the specified item name and location";
                     } else {
-                        echo "Item Info to Update <br>";
-                        echo "Item Code: $itemCode <br>";
-                        echo "Item Location: $itemLocation <br>";
-                        echo "Item Quantity: $itemQuantity <br>";
-                        echo "Will $action <br>";
+                        // echo "Item Info to Update <br>";
+                        // echo "Item Code: $itemCode <br>";
+                        // echo "Item Location: $itemLocation <br>";
+                        // echo "Item Quantity: $itemQuantity <br>";
+                        // echo "Will $action <br>";
                         updateItemStock($itemCode, $itemLocation, $itemQuantity, $action); 
                     }
                     

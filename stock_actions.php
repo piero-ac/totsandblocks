@@ -61,9 +61,9 @@
             <h2>Update Item Quantity</h2>
             <form name="update-itemquantity" method="POST">
             <p>Item Name:
-                <select name="item_update_name" required>
+                <select name="item_update_code" required>
                     <option value="">Select Item</option>
-                    <?php getItemNames(); ?>
+                    <?php getItemNamesFromQuantityTable(); ?>
                 </select>
             </p>
             <p> Location:
@@ -76,13 +76,34 @@
                 <input type="number" name="item_update_quantity" min="1" max="99" required>
             </p>
             <p>
-                <input type="radio" id="add" value="add" name="update_quantity">
+                <input type="radio" id="add" value="add" name="update_action" required>
                 <label for="add">Add</label>
-                <input type="radio" id="delete" value="del" name="update_quantity">
+                <input type="radio" id="delete" value="del" name="update_action">
                 <label for="delete">Delete</label>
             </p>
             <p><input type="submit" value="Update Item Info" name="btnSubmitUpdate"></p>
+            <?php
+                if(isset($_POST['btnSubmitUpdate'])){
+                    $itemCode = $_POST['item_update_code'];
+                    $itemLocation = $_POST['item_update_location'];
+                    $itemQuantity = $_POST['item_update_quantity'];
+                    $action = $_POST['update_action'];
+                    if(!checkIfComboExistsQuantityTable($itemCode, $itemLocation)){
+                        echo "There is no record with the specified item name and location";
+                    } else {
+                        echo "Item Info to Update <br>";
+                        echo "Item Code: $itemCode <br>";
+                        echo "Item Location: $itemLocation <br>";
+                        echo "Item Quantity: $itemQuantity <br>";
+                        echo "Will $action <br>";
+                        updateItemStock($itemCode, $itemLocation, $itemQuantity, $action); 
+                    }
+                    
+                }
+            ?>
+
             </form>
+            
         </div>
         <div class="delete-itemstockinfo-ctn">
             <h2>Delete Item Stock Information</h2>

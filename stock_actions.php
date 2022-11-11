@@ -19,38 +19,57 @@
     
 ?>
     <a href='login.php'>Back to Homepage</a>
-    <h1>Manage Stock</h1>
+    <h1>Manage Stock*</h1>
     <hr>
     <main id="stock-main" class="side-by-side" >
         <div class="insert-initialstock-ctn">
             <h2>Insert New item Stock Information</h2>
-            <form action="">
+            <form name="insert_item_stockinfo" method="POST">
                 <p>Item Name:
-                    <select name="item_insert_name" required>
+                    <select name="item_insert_code" required>
                         <option value="">Select Item</option>
+                        <?php getItemNamesWithoutCompleteStockInfo(); ?>
                     </select>
                 </p>
                 <p> Location:
                     <select name="item_insert_location" required>
                         <option value="">Select Location</option>
+                        <?php getLocations(); ?>
                     </select>
                 </p>
                 <p>Quantity:
-                    <input type="text" name="item_insert_quantity" required>
+                    <input type="number" name="item_insert_quantity" min="1" max="99" required>
                 </p>
                 <p><input type="submit" value="Insert Item" name="btnSubmitInsert"></p>
+                <?php
+                    if(isset($_POST['btnSubmitInsert'])){
+                        $itemCode = $_POST['item_insert_code'];
+                        $itemLocation = $_POST['item_insert_location'];
+                        $itemQuantity = $_POST['item_insert_quantity'];
+                        if(checkIfComboExistsQuantityTable($itemCode, $itemLocation)){
+                            echo "There is already a record with same Item Code + Location";
+                        } else {
+                           insertItemStock($itemCode, $itemLocation, $itemQuantity, $user_id); 
+                        }
+                        
+                    }
+                ?>
+
             </form>
         </div>
         <div class="update-itemquantity-ctn">
+            <h2>Update Item Quantity</h2>
             <form action="">
             <p>Item Name:
                 <select name="item_update_name" required>
                     <option value="">Select Item</option>
+                    <?php getItemNames(); ?>
                 </select>
             </p>
             <p> Location:
                 <select name="item_update_location" required>
                     <option value="">Select Location</option>
+                    <?php getLocations(); ?>
                 </select>
             </p>
             <p>Quantity:
@@ -60,12 +79,14 @@
                 <input type="radio" id="add" value="add_quantity" name="update_quantity">
                 <label for="add">Add</label>
                 <input type="radio" id="delete" value="del_quantity" name="update_quantity">
-                <label for="delete">Add</label>
+                <label for="delete">Delete</label>
             </p>
-            <p><input type="submit" value="Insert Item" name="btnSubmitUpdate"></p>
+            <p><input type="submit" value="Update Item" name="btnSubmitUpdate"></p>
             </form>
         </div>
     </main>
+    <hr>
+    <?php displayQuantityTable(); ?>
 <?php
 mysqli_close($con);
 ?>

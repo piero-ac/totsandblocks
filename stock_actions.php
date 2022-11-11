@@ -40,7 +40,7 @@
                 <p>Quantity:
                     <input type="number" name="item_insert_quantity" min="1" max="99" required>
                 </p>
-                <p><input type="submit" value="Insert Item" name="btnSubmitInsert"></p>
+                <p><input type="submit" value="Insert Item Info" name="btnSubmitInsert"></p>
                 <?php
                     if(isset($_POST['btnSubmitInsert'])){
                         $itemCode = $_POST['item_insert_code'];
@@ -59,7 +59,7 @@
         </div>
         <div class="update-itemquantity-ctn">
             <h2>Update Item Quantity</h2>
-            <form action="">
+            <form name="update-itemquantity" method="POST">
             <p>Item Name:
                 <select name="item_update_name" required>
                     <option value="">Select Item</option>
@@ -81,7 +81,23 @@
                 <input type="radio" id="delete" value="del_quantity" name="update_quantity">
                 <label for="delete">Delete</label>
             </p>
-            <p><input type="submit" value="Update Item" name="btnSubmitUpdate"></p>
+            <p><input type="submit" value="Update Item Info" name="btnSubmitUpdate"></p>
+            </form>
+        </div>
+        <div class="delete-itemstockinfo-ctn">
+            <h2>Delete Item Stock Information</h2>
+            <form name="delete-itemstockinfo" method="POST">
+            <p>Item Name:
+                <select name="item_update_name" required>
+                    <option value="">Select Item</option>
+                </select>
+            </p>
+            <p>Location:
+                <select name="item_update_location" required>
+                    <option value="">Select Location</option>
+                </select> 
+            </p>
+            <p><input type="submit" value="Delete Item Info" name="btnSubmitDelete"></p>
             </form>
         </div>
     </main>

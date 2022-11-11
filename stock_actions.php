@@ -109,16 +109,30 @@
             <h2>Delete Item Stock Information</h2>
             <form name="delete-itemstockinfo" method="POST">
             <p>Item Name:
-                <select name="item_delete_name" required>
+                <select name="item_delete_code" required>
                     <option value="">Select Item</option>
+                    <?php getItemNamesFromQuantityTable(); ?>
                 </select>
             </p>
             <p>Location:
                 <select name="item_delete_location" required>
                     <option value="">Select Location</option>
+                    <?php getLocations(); ?>
                 </select> 
             </p>
             <p><input type="submit" value="Delete Item Info" name="btnSubmitDelete"></p>
+            <?php
+                if(isset($_POST['btnSubmitDelete'])){
+                    $itemCode = $_POST['item_delete_code'];
+                    $itemLocation = $_POST['item_delete_location'];
+                    if(!checkIfComboExistsQuantityTable($itemCode, $itemLocation)){
+                        echo "There is no record with the specified item name and location";
+                    } else {
+                        deleteItemStock($itemCode, $itemLocation);
+                    }
+                    
+                }
+            ?>
             </form>
         </div>
     </main>

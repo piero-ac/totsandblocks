@@ -14,15 +14,9 @@
             echo "Please login first!"; 
             die;
         }
-        
-        // file containing db login
-        include "dbconfig.php";
-
-        // connection to database
-        $con = mysqli_connect($host, $username, $password, $dbname) 
-        or die("<br>Cannot connect to DB:$dbname on $host, error: " . mysqli_connect_errno());
-
         $user_id = $_COOKIE['userID'];
+        require('dbfunctions.php');
+
     ?>
     <a href='login.php'>Back to Homepage</a>
     <h1>Manage Items</h1>
@@ -41,7 +35,7 @@
                 <p>Item Category:
                     <select name="item_category">
                         <?php
-                            getCategories($con);
+                            getCategories();
                         ?>
                     </select>
                 </p>
@@ -55,7 +49,7 @@
                         $itemCategory = $_POST['item_category'];
                         $itemComment = $_POST['item_comment'];
 
-                        insertItem($con, $itemCode, $itemName, $itemCategory, $itemComment, $user_id);
+                        insertItem($itemCode, $itemName, $itemCategory, $itemComment, $user_id);
                     } 
                 ?>
             </form>
@@ -67,7 +61,7 @@
                     <select name="item_update" id="" required>
                         <option value=""></option>
                         <?php
-                            getItemNames($con);
+                            getItemNames();
                         ?>
                     </select>
                 </p>
@@ -78,7 +72,7 @@
                     <select name="new_item_category">
                         <option value="">Do not update</option>
                         <?php
-                            getCategories($con);
+                            getCategories();
                         ?>
                     </select>
                 </p>
@@ -93,7 +87,7 @@
                         $newItemComment = $_POST['new_item_comment'];
 
                         if(!empty($itemCodeToUpdate))
-                            updateItem($con, $itemCodeToUpdate, $newItemName, $newItemCategory, $newItemComment);
+                            updateItem($itemCodeToUpdate, $newItemName, $newItemCategory, $newItemComment);
                         else 
                             echo "Please select an item first.";
 
@@ -119,7 +113,7 @@
                     <select name="item_delete" id="">
                         <option value=""></option>
                         <?php
-                            getItemNames($con);
+                            getItemNames();
                         ?>
                     </select>
                 </p>
@@ -127,7 +121,7 @@
                 <?php 
                     if(isset($_POST['btnSubmitDelete'])){
                         $itemCodeToDelete = $_POST['item_delete'];
-                        deleteItem($con, $itemCodeToDelete);  
+                        deleteItem($itemCodeToDelete);  
                     }
                     
                 ?>
@@ -137,238 +131,229 @@
     </main>
     <hr>
     <?php
-        displayItems($con);
+        displayItems();
     ?>
     <?php
 
-    function emptyInputs($input){
-        // check if entered input is empty
-        $inputLen = strlen(trim($input));
-        if($inputLen == 0 || empty($input)){
-            return true;
-        }
-        return false;
-    }
-    function updateItem($con, $itemCode, $newItemName, $newItemCategory, $newItemComment){
+    // function emptyInputs($input){
+    //     // check if entered input is empty
+    //     $inputLen = strlen(trim($input));
+    //     if($inputLen == 0 || empty($input)){
+    //         return true;
+    //     }
+    //     return false;
+    // }
+    // function updateItem($con, $itemCode, $newItemName, $newItemCategory, $newItemComment){
 
-        // get the current information of the item
-        $current_item_info_sql = "select * from totsandblocks.Item where itemCode = '$itemCode'";
-        $current_results = mysqli_query($con, $current_item_info_sql);
+    //     // get the current information of the item
+    //     $current_item_info_sql = "select * from totsandblocks.Item where itemCode = '$itemCode'";
+    //     $current_results = mysqli_query($con, $current_item_info_sql);
 
-        if($current_results){
-            $num_rows = mysqli_num_rows($current_results);
-            if($num_rows == 0){
-                echo "Did not get item's information";
-            } else if ($num_rows > 1){
-                echo "Returned more than one item's information";
-            } else {
-                $item_row = mysqli_fetch_array($current_results);
-                $currentItemName = $item_row['itemName'];
-                $currentItemCategory = $item_row['itemCategory'];
-                $currentItemComment = $item_row['itemDescription'];
+    //     if($current_results){
+    //         $num_rows = mysqli_num_rows($current_results);
+    //         if($num_rows == 0){
+    //             echo "Did not get item's information";
+    //         } else if ($num_rows > 1){
+    //             echo "Returned more than one item's information";
+    //         } else {
+    //             $item_row = mysqli_fetch_array($current_results);
+    //             $currentItemName = $item_row['itemName'];
+    //             $currentItemCategory = $item_row['itemCategory'];
+    //             $currentItemComment = $item_row['itemDescription'];
 
-                // check if inputs are empty and if they're equal to the current item info
-                if(!emptyInputs($newItemName) && strcmp($currentItemName, $newItemName) != 0){
-                    $update_item_name = "update totsandblocks.Item set itemName = '$newItemName' where itemCode = '$itemCode'";
-                    $update_result = mysqli_query($con, $update_item_name);
-                    if($update_result){
-                        echo "<br>Updated Item Name.";
-                    } else {
-                        echo "Something is wrong with updating item name SQL: " . mysqli_error($con);
-                    }
-                } else {
-                    echo "<br>Did not update item name.";
-                }
+    //             // check if inputs are empty and if they're equal to the current item info
+    //             if(!emptyInputs($newItemName) && strcmp($currentItemName, $newItemName) != 0){
+    //                 $update_item_name = "update totsandblocks.Item set itemName = '$newItemName' where itemCode = '$itemCode'";
+    //                 $update_result = mysqli_query($con, $update_item_name);
+    //                 if($update_result){
+    //                     echo "<br>Updated Item Name.";
+    //                 } else {
+    //                     echo "Something is wrong with updating item name SQL: " . mysqli_error($con);
+    //                 }
+    //             } else {
+    //                 echo "<br>Did not update item name.";
+    //             }
 
-                if(!emptyInputs($newItemCategory) && strcmp($currentItemCategory, $newItemCategory) != 0){
-                    $update_item_category = "update totsandblocks.Item set itemCategory = '$newItemCategory' where itemCode = '$itemCode'"; 
-                    $update_result = mysqli_query($con, $update_item_category);
-                    if($update_result){
-                        echo "<br>Updated Item Category.";
-                    } else {
-                        echo "Something is wrong with updating item category SQL: " . mysqli_error($con);
-                    }
-                } else {
-                    echo "<br>Did not update item category.";
-                }
+    //             if(!emptyInputs($newItemCategory) && strcmp($currentItemCategory, $newItemCategory) != 0){
+    //                 $update_item_category = "update totsandblocks.Item set itemCategory = '$newItemCategory' where itemCode = '$itemCode'"; 
+    //                 $update_result = mysqli_query($con, $update_item_category);
+    //                 if($update_result){
+    //                     echo "<br>Updated Item Category.";
+    //                 } else {
+    //                     echo "Something is wrong with updating item category SQL: " . mysqli_error($con);
+    //                 }
+    //             } else {
+    //                 echo "<br>Did not update item category.";
+    //             }
 
-                if(!emptyInputs($newItemComment) && strcmp($currentItemComment, $newItemComment) != 0){
-                    $update_item_comment = "update totsandblocks.Item set itemDescription = '$newItemComment' where itemCode = '$itemCode'";
-                    $update_result = mysqli_query($con, $update_item_comment);
-                    if($update_result){
-                        echo "<br>Updated Item Description.";
-                    } else {
-                        echo "Something is wrong with updating item description SQL: " . mysqli_error($con);
-                    }
-                } else {
-                    echo "<br>Did not update item description.";
-                }
+    //             if(!emptyInputs($newItemComment) && strcmp($currentItemComment, $newItemComment) != 0){
+    //                 $update_item_comment = "update totsandblocks.Item set itemDescription = '$newItemComment' where itemCode = '$itemCode'";
+    //                 $update_result = mysqli_query($con, $update_item_comment);
+    //                 if($update_result){
+    //                     echo "<br>Updated Item Description.";
+    //                 } else {
+    //                     echo "Something is wrong with updating item description SQL: " . mysqli_error($con);
+    //                 }
+    //             } else {
+    //                 echo "<br>Did not update item description.";
+    //             }
 
-            }
-        } else {
-            echo "Something wrong with getting current item's info SQL: " . mysqli_error($con);
-        }
-    }
+    //         }
+    //     } else {
+    //         echo "Something wrong with getting current item's info SQL: " . mysqli_error($con);
+    //     }
+    // }
 
-    function displayItems($con){
-        $items_sql = "select i.*, c.categoryName as cName, u.fName as fName from totsandblocks.Item i, totsandblocks.Users u, totsandblocks.Category c";
-        $items_sql = $items_sql . " where c.categoryID = i.itemCategory and u.userID = i.addedBy";
+    // function displayItems($con){
+    //     $items_sql = "select i.*, c.categoryName as cName, u.fName as fName from totsandblocks.Item i, totsandblocks.Users u, totsandblocks.Category c";
+    //     $items_sql = $items_sql . " where c.categoryID = i.itemCategory and u.userID = i.addedBy";
 
-        $items_results = mysqli_query($con, $items_sql);
-        if($items_results){
-            $num_items = mysqli_num_rows($items_results);
-            if($num_items == 0){
-                echo "No items in Item table.";
-            } else {
-                echo "<table border=1>";
-                echo "<tbody>";
-                echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Comment</th><th>Added By</th><tr>";
+    //     $items_results = mysqli_query($con, $items_sql);
+    //     if($items_results){
+    //         $num_items = mysqli_num_rows($items_results);
+    //         if($num_items == 0){
+    //             echo "No items in Item table.";
+    //         } else {
+    //             echo "<table border=1>";
+    //             echo "<tbody>";
+    //             echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Comment</th><th>Added By</th><tr>";
 
-                while($items_row = mysqli_fetch_array($items_results)){
-                    $itemCode = $items_row['itemCode'];
-                    $itemName = $items_row['itemName'];
-                    $itemCategory = $items_row['cName'];
-                    $itemDesc = $items_row['itemDescription'];
-                    $addedBy = $items_row['fName'];
+    //             while($items_row = mysqli_fetch_array($items_results)){
+    //                 $itemCode = $items_row['itemCode'];
+    //                 $itemName = $items_row['itemName'];
+    //                 $itemCategory = $items_row['cName'];
+    //                 $itemDesc = $items_row['itemDescription'];
+    //                 $addedBy = $items_row['fName'];
 
-                    echo "<tr><td>$itemCode</td><td>$itemName</td><td>$itemCategory</td><td>$itemDesc</td><td>$addedBy</td></tr>";
-                }
+    //                 echo "<tr><td>$itemCode</td><td>$itemName</td><td>$itemCategory</td><td>$itemDesc</td><td>$addedBy</td></tr>";
+    //             }
 
-                echo "</tbody>";
-                echo "</table>";
-            }
-            mysqli_free_result($items_results);
-        } else {
-            echo "Something is wrong with SQL: " . mysqli_error($con);
-        }
-    }
+    //             echo "</tbody>";
+    //             echo "</table>";
+    //         }
+    //         mysqli_free_result($items_results);
+    //     } else {
+    //         echo "Something is wrong with SQL: " . mysqli_error($con);
+    //     }
+    // }
 
-    function getCategories($con){
-        $category_sql = "select categoryID, categoryName from totsandblocks.Category";
-        $category_results = mysqli_query($con, $category_sql);
+    // function getCategories($con){
+    //     $category_sql = "select categoryID, categoryName from totsandblocks.Category";
+    //     $category_results = mysqli_query($con, $category_sql);
 
-        if($category_results){
-            while($category_row = mysqli_fetch_array($category_results)){
-                $categoryID = $category_row['categoryID'];
-                $categoryName = $category_row['categoryName'];
-                echo "<option value='$categoryID'>$categoryName</option>";
-            }
-            mysqli_free_result($category_results);
-        } else {
-            echo "Something is wrong with SQL: " . mysqli_error($con);
-        }
-    }
+    //     if($category_results){
+    //         while($category_row = mysqli_fetch_array($category_results)){
+    //             $categoryID = $category_row['categoryID'];
+    //             $categoryName = $category_row['categoryName'];
+    //             echo "<option value='$categoryID'>$categoryName</option>";
+    //         }
+    //         mysqli_free_result($category_results);
+    //     } else {
+    //         echo "Something is wrong with SQL: " . mysqli_error($con);
+    //     }
+    // }
 
-    function getItemNames($con){
-        //get the item names from items table
-        $items_sql = "select itemCode, itemName from totsandblocks.Item";
-        $items_results = mysqli_query($con, $items_sql);
+    // function getItemNames($con){
+    //     //get the item names from items table
+    //     $items_sql = "select itemCode, itemName from totsandblocks.Item";
+    //     $items_results = mysqli_query($con, $items_sql);
 
-        if($items_results){
-            while($items_row = mysqli_fetch_array($items_results)){
-                $itemCode = $items_row['itemCode'];
-                $itemName = $items_row['itemName'];
-                echo "<option value='$itemCode'>$itemName</option>";
-            }
-            mysqli_free_result($items_results);
-        } else {
-            echo "Something is wrong with SQL: " . mysqli_error($con);
-        }
-    }
+    //     if($items_results){
+    //         while($items_row = mysqli_fetch_array($items_results)){
+    //             $itemCode = $items_row['itemCode'];
+    //             $itemName = $items_row['itemName'];
+    //             echo "<option value='$itemCode'>$itemName</option>";
+    //         }
+    //         mysqli_free_result($items_results);
+    //     } else {
+    //         echo "Something is wrong with SQL: " . mysqli_error($con);
+    //     }
+    // }
 
-    function insertItem($con, $itemCode, $itemName, $itemCategory, $itemComment, $user_id){
-        // check if item code is not duplicated or amount entered is not valid input
-        if(duplicateCode($con, $itemCode)){
-            echo "<p style='color:red'>Did not insert item</p>";
-        } else {
-            $insert_sql = "insert into totsandblocks.Item values ('$itemCode', '$itemName', '$itemCategory', '$itemComment', '$user_id')";
-            $insert_result = mysqli_query($con, $insert_sql);
-            if($insert_result){
-                echo "<br>Item Code: ($itemCode) has been inserted successfully.";
-            } else {
-                echo "Something is wrong with insertion SQL: " . mysqli_error($con);
-            }
-        }
+    // function insertItem($con, $itemCode, $itemName, $itemCategory, $itemComment, $user_id){
+    //     // check if item code is not duplicated or amount entered is not valid input
+    //     if(duplicateCode($con, $itemCode)){
+    //         echo "<p style='color:red'>Did not insert item</p>";
+    //     } else {
+    //         $insert_sql = "insert into totsandblocks.Item values ('$itemCode', '$itemName', '$itemCategory', '$itemComment', '$user_id')";
+    //         $insert_result = mysqli_query($con, $insert_sql);
+    //         if($insert_result){
+    //             echo "<br>Item Code: ($itemCode) has been inserted successfully.";
+    //         } else {
+    //             echo "Something is wrong with insertion SQL: " . mysqli_error($con);
+    //         }
+    //     }
 
-    }
+    // }
 
-    function deleteItem($con, $itemCode){
-        // check if $itemCode is in quantity
-        if(empty($itemCode)){
-            echo "<p style='color:blue'> Please select an item</p>";
-            return;
-        }
-        if(itemCodeReferenced($con, $itemCode)){
-            echo "<p style='color:red'>Did not delete item</p>";
-        } else {
-            $delete_sql = "delete from totsandblocks.Item where itemCode = '$itemCode'";
-            $delete_sql = mysqli_query($con, $delete_sql);
-            if($delete_sql){
-                echo "<br>Item Code: ($itemCode) has been deleted successfully.";
-            } else {
-                echo "Something is wrong with deletion SQL: " . mysqli_error($con);
-            }
-        }
+    // function deleteItem($con, $itemCode){
+    //     // check if $itemCode is in quantity
+    //     if(empty($itemCode)){
+    //         echo "<p style='color:blue'> Please select an item</p>";
+    //         return;
+    //     }
+    //     if(itemCodeReferenced($con, $itemCode)){
+    //         echo "<p style='color:red'>Did not delete item</p>";
+    //     } else {
+    //         $delete_sql = "delete from totsandblocks.Item where itemCode = '$itemCode'";
+    //         $delete_sql = mysqli_query($con, $delete_sql);
+    //         if($delete_sql){
+    //             echo "<br>Item Code: ($itemCode) has been deleted successfully.";
+    //         } else {
+    //             echo "Something is wrong with deletion SQL: " . mysqli_error($con);
+    //         }
+    //     }
         
-    }
+    // }
 
-    function itemCodeReferenced($con, $itemCode){
-        $codes_array = getItemCodes($con, "Quantity");
-        if(in_array($itemCode, $codes_array)){
-            echo "<p style='color:red'>Error: Attempting to delete item that is still referenced in Quantity Table.</p>";
-            return true;
-        }
-        return false;
+    // function itemCodeReferenced($con, $itemCode){
+    //     $codes_array = getItemCodes($con, "Quantity");
+    //     if(in_array($itemCode, $codes_array)){
+    //         echo "<p style='color:red'>Error: Attempting to delete item that is still referenced in Quantity Table.</p>";
+    //         return true;
+    //     }
+    //     return false;
 
-    }
+    // }
 
-    function duplicateCode($con, $itemCode){
-        $codes_array = getItemCodes($con, "Item");
-        if(in_array($itemCode, $codes_array)){
-            echo "<p style='color:red'>Error: Attempting to insert duplicate code.</p>";
-            return true;
-        }
-        return false;
-    }
-
-    function invalidAvgCost($itemAvgCost){
-        $itemAvgCost = (int)$itemAvgCost;
-        if($itemAvgCost < 0){
-            echo "<p style='color:red'>Error: Cannot insert negative value. Enter avg. cost >= $0</p>";
-            return true;
-        }
-        return false;
-    }
+    // function duplicateCode($con, $itemCode){
+    //     $codes_array = getItemCodes($con, "Item");
+    //     if(in_array($itemCode, $codes_array)){
+    //         echo "<p style='color:red'>Error: Attempting to insert duplicate code.</p>";
+    //         return true;
+    //     }
+    //     return false;
+    // }
     
-    function getItemCodes($con, $table){
-        if($table == 'Item'){
-            $codes_sql = "select itemCode from totsandblocks.Item";
-        } else  if ($table == 'Quantity'){
-            $codes_sql = "select itemCode from totsandblocks.Quantity";
-        }
+    // function getItemCodes($con, $table){
+    //     if($table == 'Item'){
+    //         $codes_sql = "select itemCode from totsandblocks.Item";
+    //     } else  if ($table == 'Quantity'){
+    //         $codes_sql = "select itemCode from totsandblocks.Quantity";
+    //     }
 
-        $codes_result = mysqli_query($con, $codes_sql);
-        $codes_array = array();
+    //     $codes_result = mysqli_query($con, $codes_sql);
+    //     $codes_array = array();
 
-        if($codes_result){
-            $num_codes = mysqli_num_rows($codes_result);
-            if($num_codes == 0){
-                echo "No codes were returned.";
-            } else {
-                while($code_row = mysqli_fetch_array($codes_result)){ 
-                    $code = $code_row['itemCode'];
-                    array_push($codes_array, $code);
-                }
-                mysqli_free_result($codes_result);
-            }
-        } else {
-            echo "Something wrong with checking codes SQL: " . mysqli_error($con);
-        }
+    //     if($codes_result){
+    //         $num_codes = mysqli_num_rows($codes_result);
+    //         if($num_codes == 0){
+    //             echo "No codes were returned.";
+    //         } else {
+    //             while($code_row = mysqli_fetch_array($codes_result)){ 
+    //                 $code = $code_row['itemCode'];
+    //                 array_push($codes_array, $code);
+    //             }
+    //             mysqli_free_result($codes_result);
+    //         }
+    //     } else {
+    //         echo "Something wrong with checking codes SQL: " . mysqli_error($con);
+    //     }
 
-        return $codes_array;
+    //     return $codes_array;
 
-    }
-    mysqli_close($con);
+    // }
+    // mysqli_close($con);
     ?>
 </body>
 </html>

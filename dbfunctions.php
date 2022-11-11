@@ -315,6 +315,7 @@
         return $view_sql;
     
     }
+
     function getLocations(){
         global $con;
 
@@ -330,5 +331,31 @@
         } else {
             echo "Something is wrong with location SQL: " . mysqli_error($con);
         }
+    }
+
+    function getItemNamesWithoutCompleteStockInfo(){
+        global $con;
+
+        // get the item names for items that don't have quantity stock information for both locations
+        // this include items that:
+        // 1. have no stock information whatsoever
+        // 2. have stock information for only one location
+        // This means exclude items that have two records in the quantity table
+        $items_sql = "select itemCode, itemName from totsandblocks.Item "
+                    . " where itemCode not in (select itemCode from totsandblocks.Quantity "
+                    . " group by itemCode having count(*) = 2)";
+        
+        $items_results = mysqli_query($con, $items_sql);
+
+        if($items_results){
+            while($items_row = mysqli_fetch_array($items_results)){
+                $itemCode = $items_row['itemCode'];
+                $itemName = $items_row['itemName'];
+                echo "<option value='$itemCode'>$itemName</option>";
+            }
+            mysqli_free_result($items_results);
+        } else {
+            echo "Something is wrong with SQL: " . mysqli_error($con);
+        } 
     }
 ?>

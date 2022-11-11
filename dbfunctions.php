@@ -506,6 +506,19 @@
             return false; # we can delete from existing quantity
         }
         
-    }   
+    } 
+    
+    function deleteItemStock($itemCode, $itemLocation){
+        global $con;
+
+        $sql = "delete from totsandblocks.Quantity where itemCode = '$itemCode' and locationID = '$itemLocation'";
+        $sql_result= mysqli_query($con, $sql);
+
+        if($sql_result){
+            echo "Successfully deleted record with Item Code: $itemCode and Location ID: $itemLocation";
+        } else {
+            echo "Something is wrong with delete item stock SQL: " . mysqli_error($con);
+        }
+    }
 
 ?>

@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Stock</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <?php
@@ -13,19 +14,14 @@
         echo "Please login first!"; 
         die;
     }
-    
-    include "dbconfig.php";
-
-    // connection to database
-    $con = mysqli_connect($host, $username, $password, $dbname) 
-      or die("<br>Cannot connect to DB:$dbname on $host, error: " . mysqli_connect_errno());
-
     $user_id = $_COOKIE['userID'];
+    require('dbfunctions.php');
+    
 ?>
     <a href='login.php'>Back to Homepage</a>
     <h1>Manage Stock</h1>
     <hr>
-    <main id="stock-main">
+    <main id="stock-main" class="side-by-side" >
         <div class="insert-initialstock-ctn">
             <h2>Insert New item Stock Information</h2>
             <form action="">

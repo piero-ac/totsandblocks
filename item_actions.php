@@ -21,7 +21,7 @@
     <a href='login.php'>Back to Homepage</a>
     <h1>Manage Items*</h1>
     <hr>
-    <main id="items-main">
+    <main id="items-main" class="side-by-side">
         <div class="add-items-ctn">
             <h2>Add Item</h2>
              <!-- ADD ITEMS FORM -->

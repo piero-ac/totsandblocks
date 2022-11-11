@@ -358,4 +358,80 @@
             echo "Something is wrong with SQL: " . mysqli_error($con);
         } 
     }
+
+    # Insert Item Information to Quantity Table
+    function insertItemStock($itemCode, $itemLocation, $itemQuantity, $user_id) {
+        global $con;
+
+        if (!is_numeric($itemQuantity)){
+            echo "Quantity is not a number.";
+        } else {
+            // echo "Item Code: $itemCode <br>";
+            // echo "Item Quantity: $itemQuantity <br>";
+            // echo "Item Location: $itemLocation <br>";
+            // echo "User ID: $user_id";
+            $insert_sql = "insert into totsandblocks.Quantity (itemCode, quantity, locationID, addedBy) values ('$itemCode', $itemQuantity, $itemLocation, '$user_id')";
+            $insert_result = mysqli_query($con, $insert_sql);
+            if($insert_result){
+                echo "<br>Quantity information for Item Code: ($itemCode) has been inserted successfully.";
+            } else {
+                echo "Something is wrong with insertion to quantity table SQL: " . mysqli_error($con);
+            }
+        }
+        
+    }
+
+    # Check if a record with same ItemCode + ItemLocation exists
+    function checkIfComboExistsQuantityTable($itemCode, $itemLocation){
+        global $con;
+
+        $check_sql = "select * from totsandblocks.Quantity where itemCode = '$itemCode' and locationID = '$itemLocation'";
+        $check_results = mysqli_query($con, $check_sql);
+
+        if($check_results){
+            $num_rows = mysqli_num_rows($check_results);
+            if($num_rows == 1) return true;
+            else return false;
+            mysqli_free_result($check_results);
+        } else {
+            echo "Something is wrong with checking SQL: " . mysqli_error($con);
+        } 
+
+    }
+
+    # Display Quantity Table
+    function displayQuantityTable(){
+        global $con;
+
+        $view_sql = viewEntireInventory();
+        $view_result = mysqli_query($con, $view_sql);
+        if($view_result) {
+            $num_items = mysqli_num_rows($view_result);
+        if($num_items == 0){
+            echo "No items in Item table.";
+        } else {
+            echo "<table border=1 cellpadding=3>";
+            echo "<tbody>";
+            echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Quantity</th><th>Location</th><tr>";
+    
+            while($view_row = mysqli_fetch_array($view_result)){
+                $itemCode = $view_row['itemCode'];
+                $itemName = $view_row['itemName'];
+                $itemCategory = $view_row['cName'];
+                $itemQuantity = $view_row['quantity'];
+                $location = $view_row['locationName'];
+    
+                echo "<tr><td>$itemCode</td><td>$itemName</td><td>$itemCategory</td><td>$itemQuantity</td><td>$location</td></tr>";
+            }
+    
+            echo "</tbody>";
+            echo "</table>";
+        }
+        mysqli_free_result($view_result);
+        } else {
+            echo "Something is wrong with view SQL: " . mysqli_error($con);
+        }
+
+    }
+
 ?>

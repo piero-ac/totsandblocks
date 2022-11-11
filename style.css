@@ -1,4 +1,4 @@
-#items-main {
+.side-by-side{
     display: flex;
     flex-flow: row;
     column-gap: 20px;

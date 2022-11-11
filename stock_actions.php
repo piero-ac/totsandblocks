@@ -5,19 +5,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Stock</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<?php
-    // check if user id exists
-    if(!isset($_COOKIE['userID'])) { 
-        echo "Please login first!"; 
-        die;
-    }
-    $user_id = $_COOKIE['userID'];
-    require('dbfunctions.php');
-    
-?>
+    <?php
+        // check if user id exists
+        if(!isset($_COOKIE['userID'])) { 
+            echo "Please login first!"; 
+            die;
+        }
+        $user_id = $_COOKIE['userID'];
+        require('dbfunctions.php');
+        
+    ?>
     <a href='login.php'>Back to Homepage</a>
     <h1>Manage Stock*</h1>
     <hr>
@@ -73,12 +73,12 @@
                 </select>
             </p>
             <p>Quantity:
-                <input type="text" name="item_update_quantity" required>
+                <input type="number" name="item_update_quantity" min="1" max="99" required>
             </p>
             <p>
-                <input type="radio" id="add" value="add_quantity" name="update_quantity">
+                <input type="radio" id="add" value="add" name="update_quantity">
                 <label for="add">Add</label>
-                <input type="radio" id="delete" value="del_quantity" name="update_quantity">
+                <input type="radio" id="delete" value="del" name="update_quantity">
                 <label for="delete">Delete</label>
             </p>
             <p><input type="submit" value="Update Item Info" name="btnSubmitUpdate"></p>
@@ -88,12 +88,12 @@
             <h2>Delete Item Stock Information</h2>
             <form name="delete-itemstockinfo" method="POST">
             <p>Item Name:
-                <select name="item_update_name" required>
+                <select name="item_delete_name" required>
                     <option value="">Select Item</option>
                 </select>
             </p>
             <p>Location:
-                <select name="item_update_location" required>
+                <select name="item_delete_location" required>
                     <option value="">Select Location</option>
                 </select> 
             </p>
@@ -103,8 +103,5 @@
     </main>
     <hr>
     <?php displayQuantityTable(); ?>
-<?php
-mysqli_close($con);
-?>
 </body>
 </html>

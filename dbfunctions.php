@@ -434,4 +434,79 @@
 
     }
 
+    function getItemNamesFromQuantityTable(){
+        global $con;
+
+        $items_sql = "select DISTINCT i.itemCode, i.itemName " 
+                    . " from totsandblocks.Item i, totsandblocks.Quantity q "
+                    . " where i.itemCode = q.itemCode";
+        $items_results = mysqli_query($con, $items_sql);
+
+        if($items_results){
+            while($items_row = mysqli_fetch_array($items_results)){
+                $itemCode = $items_row['itemCode'];
+                $itemName = $items_row['itemName'];
+                echo "<option value='$itemCode'>$itemName</option>";
+            }
+            mysqli_free_result($items_results);
+        } else {
+            echo "Something is wrong with SQL: " . mysqli_error($con);
+        } 
+        
+    }
+
+    # Update Quantity of Matching Record[itemCode, itemLocation]
+    function updateItemStock($itemCode, $itemLocation, $itemQuantity, $action){
+        global $con;
+        $itemQuantity = (int)$itemQuantity;
+        $currentQuantity = getCurrentQuantity($itemCode, $itemLocation);
+        $new_quantity = 0;
+
+        //if action is delete and quantityToDelete is <= existing quantity
+        if($action == 'del' &&  lessThanCurrentQuantity($itemCode, $itemLocation, $itemQuantity)){
+            $new_quantity = $currentQuantity - $itemQuantity;
+        } else {
+            echo "Existing quantity is less than quantity to delete. <br>";
+        }
+
+        // if action is add, calculate new quantity
+        if ($action == 'add'){
+            $new_quantity = $currentQuantity + $itemQuantity;
+        }
+
+        $update_sql = "update totsandblocks.Quantity set quantity = '$new_quantity' where itemCode = '$itemCode' and locationID = '$itemLocation'";
+        $update_result = mysqli_query($con, $update_sql);
+        if($update_result){
+            echo "<br>Updated Item Quantity.";
+        } else {
+            echo "Something is wrong with updating item quantity SQL: " . mysqli_error($con);
+        }
+
+    }
+
+    function getCurrentQuantity($itemCode, $itemLocation){
+        global $con;
+
+        $sql = "select quantity from totsandblocks.Quantity where itemCode = '$itemCode' and locationID = '$itemLocation'";
+        $sql_result= mysqli_query($con, $sql);
+
+        if($sql_result){
+            $currentQuantity = mysqli_fetch_row($sql_result)['quantity'];
+            return (int)$currentQuantity;
+        } else {
+            echo "Something is wrong with getting current quantity SQL: " . mysqli_error($con);
+            return -1;
+        }
+    }
+    function lessThanCurrentQuantity($itemCode, $itemLocation, $quantityToDelete){
+        $currentQuantity = getCurrentQuantity($itemCode, $itemLocation);
+        # check if quantity to delete is greater than current quantity
+        if($quantityToDelete > $currentQuantity){
+            return false; # not valid quantity amount
+        } else {
+            return true; # we can delete from existing quantity
+        }
+        
+    }   
+
 ?>

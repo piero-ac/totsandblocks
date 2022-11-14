@@ -35,35 +35,39 @@
     <main id="view-main">
         <div class="search-inventory-ctn">
             <form name="search_items" method="POST">
-                <label for="category"> Category:
-                    <select name="item_category" id="category" required>
-                        <option value="*">ALL</option>
-                        <?php
-                        getCategories();
-                        ?>
-                    </select>
-                </label>
-                <label for="location">Location:
-                    <select name="item_location" id="location" required>
-                        <option value="*">ALL</option>
-                        <?php
-                        getLocations();
-                        ?>
-                    </select>
-                </label>
-                <br>
-                <label>
-                    Quantity is
-                    <select name="comparison_op" required>
-                        <option value="">Select one</option>
-                        <option value="=">equal to</option>
-                        <option value="<">less than</option>
-                        <option value="<=">less than or equal to</option>
-                        <option value=">">greater than</option>
-                        <option value=">=">greater than or equal to</option>
-                    </select>
-                    <input type="number" name="quantity-filter" min="0" max="1000" default="0" required>
-                </label>
+                <p>
+                    <label for="category"> Category:
+                        <select name="item_category" id="category" required>
+                            <option value="*">ALL</option>
+                            <?php
+                            getCategories();
+                            ?>
+                        </select>
+                    </label>
+                    <label for="location">Location:
+                        <select name="item_location" id="location" required>
+                            <option value="*">ALL</option>
+                            <?php
+                            getLocations();
+                            ?>
+                        </select>
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        Quantity is
+                        <select name="comparison_op" required>
+                            <option value="">Select one</option>
+                            <option value="=">equal to</option>
+                            <option value="<">less than</option>
+                            <option value="<=">less than or equal to</option>
+                            <option value=">">greater than</option>
+                            <option value=">=">greater than or equal to</option>
+                        </select>
+                        <input type="number" name="quantity-filter" min="0" max="1000" default="0" required>
+                    </label>
+                </p>
+
                 <p>
                     Quantity Sort:<br>
                     <label for="quantity-nosort">

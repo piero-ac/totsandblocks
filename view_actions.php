@@ -62,9 +62,49 @@
                         <option value=">">greater than</option>
                         <option value=">=">greater than or equal to</option>
                     </select>
-                    <input type="number" name="quantity-filter" min="0" max="1000" required>
+                    <input type="number" name="quantity-filter" min="0" max="1000" default="0" required>
                 </label>
-
+                <p>
+                    Quantity Sort:<br>
+                    <label for="quantity-nosort">
+                        <input type="radio" name="quantity-sort" id="quantity-nosort" value="q-none" checked required>
+                        None
+                    </label>
+                    <label for="quantity-ascsort">
+                        <input type="radio" name="quantity-sort" id="quantity-ascsort" value="q-asc">
+                        Ascending
+                    </label>
+                    <label for="quantity-descsort">
+                        <input type="radio" name="quantity-sort" id="quantity-descsort" value="q-desc">
+                        Descending
+                    </label>
+                </p>
+                <p>
+                    Name Sort:<br>
+                    <label for="name-nosort">
+                        <input type="radio" name="name-sort" id="name-nosort" value="n-none" checked required>
+                        None
+                    </label>
+                    <label for="name-ascsort">
+                        <input type="radio" name="name-sort" id="name-ascsort" value="n-asc">
+                        Ascending
+                    </label>
+                    <label for="name-descsort">
+                        <input type="radio" name="name-sort" id="name-descsort" value="n-desc">
+                        Descending
+                    </label>
+                </p>
+                <p>
+                    Location Sort:<br>
+                    <label for="location-aca-first">
+                        <input type="radio" name="location-sort" id="location-aca-sort" value="l-aca-first" checked required>
+                        Academy First
+                    </label>
+                    <label for="location-pre-first">
+                        <input type="radio" name="location-sort" id="location-pre-sort" value="l-pre-first">
+                        Preschool First
+                    </label>
+                </p>
                 <p><input type="submit" value="Search" name="btnSearch"></p>
                 <?php
                 if (isset($_POST['btnSearch'])) {
@@ -72,10 +112,14 @@
                     $itemLocation = $_POST['item_location'];
                     $quantityComparison = $_POST['comparison_op'];
                     $quantityNumber = $_POST['quantity-filter'];
+                    $quantitySort = $_POST['quantity-sort'];
+                    $nameSort = $_POST['name-sort'];
+                    $locationSort = $_POST['location-sort'];
                     // echo "category: $itemCategory <br>";
                     // echo "location: $itemLocation <br>";
                     // echo "comparison: $quantityComparison <br>";
                     // echo "number: $quantityNumber <br>";
+                    // successful is a table with at least 1 result is returned
                     $successful = viewInventory($itemCategory, $itemLocation, $quantityComparison, $quantityNumber);
                     if ($successful)
                         echo "<br><br><button onclick=printData()>Print Table</button>";

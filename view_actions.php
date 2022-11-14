@@ -84,7 +84,7 @@
                     </label>
                 </p>
                 <p>
-                    Name Sort:<br>
+                    Item Name Sort:<br>
                     <label for="name-nosort">
                         <input type="radio" name="name-sort" id="name-nosort" value="n-none" checked required>
                         None
@@ -98,17 +98,6 @@
                         Descending
                     </label>
                 </p>
-                <p>
-                    Location Sort:<br>
-                    <label for="location-aca-first">
-                        <input type="radio" name="location-sort" id="location-aca-sort" value="l-aca-first" checked required>
-                        Academy First
-                    </label>
-                    <label for="location-pre-first">
-                        <input type="radio" name="location-sort" id="location-pre-sort" value="l-pre-first">
-                        Preschool First
-                    </label>
-                </p>
                 <p><input type="submit" value="Search" name="btnSearch"></p>
                 <?php
                 if (isset($_POST['btnSearch'])) {
@@ -118,13 +107,12 @@
                     $quantityNumber = $_POST['quantity-filter'];
                     $quantitySort = $_POST['quantity-sort'];
                     $nameSort = $_POST['name-sort'];
-                    $locationSort = $_POST['location-sort'];
                     // echo "category: $itemCategory <br>";
                     // echo "location: $itemLocation <br>";
                     // echo "comparison: $quantityComparison <br>";
                     // echo "number: $quantityNumber <br>";
                     // successful is a table with at least 1 result is returned
-                    $successful = viewInventory($itemCategory, $itemLocation, $quantityComparison, $quantityNumber);
+                    $successful = viewInventory($itemCategory, $itemLocation, $quantityComparison, $quantityNumber, $quantitySort, $nameSort);
                     if ($successful)
                         echo "<br><br><button onclick=printData()>Print Table</button>";
                 }

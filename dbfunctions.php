@@ -243,7 +243,7 @@ function itemCodeReferenced($itemCode)
     return false;
 }
 
-function viewInventory($itemCategory, $itemLocation, $quantityComparison, $quantityNumber)
+function viewInventory($itemCategory, $itemLocation, $quantityComparison, $quantityNumber, $qSort, $nSort)
 {
     global $con;
 
@@ -260,8 +260,34 @@ function viewInventory($itemCategory, $itemLocation, $quantityComparison, $quant
         }
     }
 
+    // Add having clause for quantiy filtering
     $view_sql = $view_sql . " having quantity $quantityComparison $quantityNumber";
-    //echo $view_sql;
+
+
+    // Add additional criteria to SQL statement
+    if (strcmp($qSort, "q-none") != 0 || strcmp($nSort, "n-none") != 0) {
+        $view_sql = $view_sql . " order by ";
+
+        // Add correct quantity sort, and check if we need a comma for next criteria
+        if (strcmp($qSort, "q-asc")) {
+            $view_sql = $view_sql . " quantity asc, ";
+        } else {
+            $view_sql = $view_sql . " quantity desc, ";
+        }
+
+        // Add correct itemName sort
+        if (strcmp($nSort, "n-none") != 0) {
+            if (strcmp($nSort, "n-asc") == 0) {
+                $view_sql = $view_sql . " itemName asc ";
+            } else {
+                $view_sql = $view_sql . " itemName desc";
+            }
+        }
+
+        $view_sql = rtrim(trim($view_sql), ",");
+    }
+
+    echo "$view_sql <br>";
 
     $view_result = mysqli_query($con, $view_sql);
     if ($view_result) {

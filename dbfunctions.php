@@ -269,10 +269,12 @@ function viewInventory($itemCategory, $itemLocation, $quantityComparison, $quant
         $view_sql = $view_sql . " order by ";
 
         // Add correct quantity sort, and check if we need a comma for next criteria
-        if (strcmp($qSort, "q-asc")) {
-            $view_sql = $view_sql . " quantity asc, ";
-        } else {
-            $view_sql = $view_sql . " quantity desc, ";
+        if (strcmp($qSort, "q-none") != 0) {
+            if (strcmp($qSort, "q-asc")) {
+                $view_sql = $view_sql . " quantity asc, ";
+            } else {
+                $view_sql = $view_sql . " quantity desc, ";
+            }
         }
 
         // Add correct itemName sort
@@ -284,10 +286,11 @@ function viewInventory($itemCategory, $itemLocation, $quantityComparison, $quant
             }
         }
 
+        // trim any trailing commas
         $view_sql = rtrim(trim($view_sql), ",");
     }
 
-    echo "$view_sql <br>";
+    //echo "$view_sql <br>";
 
     $view_result = mysqli_query($con, $view_sql);
     if ($view_result) {

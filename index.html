@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,37 +9,42 @@
     <link rel="stylesheet" href="style.css">
     <title>Tots and Blocks</title>
 </head>
-<body>  
-    <div class="panel">
-        
-        <div class="content">
-            <img src="icons/t&b.jpg" class="logo">
-            <h1 class="panel-title">Tots & Blocks</h1>
-            <h1 class="panel-title">Inventory Managment System</h1>
-    </div>
 
-        <div class="content">
-        <form action="login.php" method="POST">
-            <div class="login">
-                <h1 class="panel-title">Welcome</h1>
-                <p>Sign in to continue</p>
-                <div class="input">
-                <label for="username"><span>Username:</span></label>
-                <input class="input-box" type="text" name="username" id="username" required>      
-                <i></i>
-        </div>
+<body>
+    <main id="login-body">
+        <div class="panel">
 
-            <div class="input">
-                <label  for="password"><span>Password:</span></label>
-                <input class="input-box" type="password" name="password" id="password" required>
-                <i></i>
+            <div class="content">
+                <img src="icons/t&b.jpg" class="logo">
+                <h1 class="panel-title">Tots & Blocks</h1>
+                <h1 class="panel-title">Inventory Managment System</h1>
             </div>
-            <p>
-                <input class="login-btn" type="submit" value="LOG IN">
-            </p>
-        </div>
-        </form>
-    </div>
-    
+
+            <div class="content">
+                <form action="login.php" method="POST">
+                    <div class="login">
+                        <h1 class="panel-title">Welcome</h1>
+                        <p>Sign in to continue</p>
+                        <div class="input">
+                            <label for="username"><span>Username:</span></label>
+                            <input class="input-box" type="text" name="username" id="username" required>
+                            <i></i>
+                        </div>
+
+                        <div class="input">
+                            <label for="password"><span>Password:</span></label>
+                            <input class="input-box" type="password" name="password" id="password" required>
+                            <i></i>
+                        </div>
+                        <p>
+                            <input class="login-btn" type="submit" value="LOG IN">
+                        </p>
+                    </div>
+                </form>
+            </div>
+    </main>
+
+
 </body>
+
 </html>

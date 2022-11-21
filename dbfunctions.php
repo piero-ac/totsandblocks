@@ -2,7 +2,7 @@
 require('dbconfig.php');
 
 # Get Items' Names That Users Can Select From
-function get_item_names($limiter = "all")
+function get_item_names(string $limiter = "all")
 {
     global $con;
     $items_sql = "";
@@ -53,7 +53,7 @@ function get_item_categories()
 }
 
 # Get Existing Item Codes
-function get_item_codes($table)
+function get_item_codes(string $table)
 {
     global $con;
 
@@ -84,8 +84,8 @@ function get_item_codes($table)
     return $codes_array;
 }
 
-# Insert Item to Items Table
-function insert_item($itemCode, $itemName, $itemCategory, $itemComment, $user_id)
+# Insert Item Info to Item Table
+function insert_item_info(string $itemCode, string $itemName, string $itemCategory, string $itemComment, string $user_id)
 {
     global $con;
 
@@ -103,7 +103,8 @@ function insert_item($itemCode, $itemName, $itemCategory, $itemComment, $user_id
     }
 }
 
-function update_item($itemCode, $newItemName, $newItemCategory, $newItemComment)
+# Update Item Info in Item Table
+function update_item_info(string $itemCode, string $newItemName, string $newItemCategory, string $newItemComment)
 {
     global $con;
 
@@ -165,7 +166,8 @@ function update_item($itemCode, $newItemName, $newItemCategory, $newItemComment)
     }
 }
 
-function delete_item($itemCode)
+# Delete Item Info from Item Table
+function delete_item_info(string $itemCode)
 {
     global $con;
 
@@ -224,7 +226,7 @@ function display_item_table()
     }
 }
 
-function is_duplicate_code($itemCode)
+function is_duplicate_code(string $itemCode)
 {
     $codes_array = get_item_codes("Item");
     if (in_array($itemCode, $codes_array)) {
@@ -234,7 +236,7 @@ function is_duplicate_code($itemCode)
     return false;
 }
 
-function is_empty_input($input)
+function is_empty_input(string $input)
 {
     // check if entered input is empty
     $inputLen = strlen(trim($input));
@@ -244,7 +246,7 @@ function is_empty_input($input)
     return false;
 }
 
-function item_code_exist($itemCode)
+function item_code_exist(string $itemCode)
 {
     $codes_array = get_item_codes("Quantity");
     if (in_array($itemCode, $codes_array)) {
@@ -254,7 +256,7 @@ function item_code_exist($itemCode)
     return false;
 }
 
-function display_inventory($itemCategory, $itemLocation, $quantityComparison, $quantityNumber, $qSort, $nSort)
+function display_inventory(string $itemCategory, string $itemLocation, string $quantityComparison, string $quantityNumber, string $qSort, string $nSort)
 {
     global $con;
 
@@ -324,7 +326,7 @@ function display_inventory($itemCategory, $itemLocation, $quantityComparison, $q
     }
 }
 
-function get_inventory_query($itemCategory, $itemLocation)
+function get_inventory_query(string $itemCategory, string $itemLocation)
 {
     $view_sql = "select i.itemCode, i.itemName, c.categoryName as cName, q.quantity, l.locationName\n"
         . "from totsandblocks.Item i , totsandblocks.Category c, totsandblocks.Quantity q, totsandblocks.Location l\n"
@@ -364,7 +366,7 @@ function get_locations()
 }
 
 # Insert Item Information to Quantity Table
-function insert_item_stock($itemCode, $itemLocation, $itemQuantity, $user_id)
+function insert_item_stock(string $itemCode, string $itemLocation, string $itemQuantity, string $user_id)
 {
     global $con;
 
@@ -386,7 +388,7 @@ function insert_item_stock($itemCode, $itemLocation, $itemQuantity, $user_id)
 }
 
 # Check if a record with same ItemCode + ItemLocation exists
-function item_stock_info_exists($itemCode, $itemLocation)
+function item_stock_info_exists(string $itemCode, string $itemLocation)
 {
     global $con;
 
@@ -439,7 +441,7 @@ function display_quantity_table()
 }
 
 # Update Quantity of Matching Record[itemCode, itemLocation]
-function update_item_stock($itemCode, $itemLocation, $itemQuantity, $action)
+function update_item_stock(string $itemCode, string $itemLocation, string $itemQuantity, string $action)
 {
     global $con;
     $itemQuantity = (int)$itemQuantity;
@@ -466,7 +468,7 @@ function update_item_stock($itemCode, $itemLocation, $itemQuantity, $action)
     }
 }
 
-function get_current_quantity($itemCode, $itemLocation)
+function get_current_quantity(string $itemCode, string $itemLocation)
 {
     global $con;
 
@@ -481,7 +483,7 @@ function get_current_quantity($itemCode, $itemLocation)
         return -1;
     }
 }
-function greater_than_current_quantity($itemCode, $itemLocation, $quantityToDelete)
+function greater_than_current_quantity(string $itemCode, string $itemLocation, string $quantityToDelete)
 {
     $currentQuantity = get_current_quantity($itemCode, $itemLocation);
     # check if quantity to delete is greater than current quantity
@@ -492,7 +494,7 @@ function greater_than_current_quantity($itemCode, $itemLocation, $quantityToDele
     }
 }
 
-function delete_item_stock($itemCode, $itemLocation)
+function delete_item_stock(string $itemCode, string $itemLocation)
 {
     global $con;
 

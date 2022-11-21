@@ -264,6 +264,7 @@ function display_inventory(string $item_category, string $item_location, string 
 
     // Add having clause for quantiy filtering
     $view_sql = $view_sql . " having quantity $quantity_comparison $quantity_number";
+    echo "$view_sql <br>";
 
 
     // Add additional criteria to SQL statement
@@ -341,7 +342,7 @@ function get_inventory_query(string $item_category, string $item_location)
         } else if ($item_category != "*" && $item_location == "*") { # Get Items of Both Locations with Specifed Category
             $view_sql .= " and c.categoryID = $item_category";
         } else { # Get Items that match Specified Location and Category
-            $view_sql .= "and c.categoryID = $item_category and q.locationID = $item_location";
+            $view_sql .= " and c.categoryID = $item_category and q.locationID = $item_location";
         }
         return $view_sql;
     }

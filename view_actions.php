@@ -40,7 +40,7 @@
                         <select name="item_category" id="category" required>
                             <option value="*">ALL</option>
                             <?php
-                            getCategories();
+                            get_item_categories();
                             ?>
                         </select>
                     </label>
@@ -48,7 +48,7 @@
                         <select name="item_location" id="location" required>
                             <option value="*">ALL</option>
                             <?php
-                            getLocations();
+                            get_locations();
                             ?>
                         </select>
                     </label>
@@ -112,7 +112,7 @@
                     // echo "comparison: $quantityComparison <br>";
                     // echo "number: $quantityNumber <br>";
                     // successful is a table with at least 1 result is returned
-                    $successful = viewInventory($itemCategory, $itemLocation, $quantityComparison, $quantityNumber, $quantitySort, $nameSort);
+                    $successful = display_inventory($itemCategory, $itemLocation, $quantityComparison, $quantityNumber, $quantitySort, $nameSort);
                     if ($successful)
                         echo "<br><br><button onclick=printData()>Print Table</button>";
                 }

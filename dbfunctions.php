@@ -2,7 +2,7 @@
 require('dbconfig.php');
 
 # Get Items' Names That Users Can Select From
-function getItemNames()
+function get_item_names()
 {
     global $con;
     //get the item names from items table
@@ -22,7 +22,7 @@ function getItemNames()
 }
 
 # Get Categories That Users Can Select From
-function getCategories()
+function get_item_categories()
 {
     global $con;
 
@@ -42,7 +42,7 @@ function getCategories()
 }
 
 # Get Existing Item Codes
-function getItemCodes($table)
+function get_item_codes($table)
 {
     global $con;
 
@@ -74,12 +74,12 @@ function getItemCodes($table)
 }
 
 # Insert Item to Items Table
-function insertItem($itemCode, $itemName, $itemCategory, $itemComment, $user_id)
+function insert_item($itemCode, $itemName, $itemCategory, $itemComment, $user_id)
 {
     global $con;
 
     // check if item code is not duplicated or amount entered is not valid input
-    if (duplicateCode($itemCode)) {
+    if (is_duplicate_code($itemCode)) {
         echo "<p style='color:red'>Did not insert item</p>";
     } else {
         $insert_sql = "insert into totsandblocks.Item values ('$itemCode', '$itemName', '$itemCategory', '$itemComment', '$user_id')";
@@ -92,7 +92,7 @@ function insertItem($itemCode, $itemName, $itemCategory, $itemComment, $user_id)
     }
 }
 
-function updateItem($itemCode, $newItemName, $newItemCategory, $newItemComment)
+function update_item($itemCode, $newItemName, $newItemCategory, $newItemComment)
 {
     global $con;
 
@@ -113,7 +113,7 @@ function updateItem($itemCode, $newItemName, $newItemCategory, $newItemComment)
             $currentItemComment = $item_row['itemDescription'];
 
             // check if inputs are empty and if they're equal to the current item info
-            if (!emptyInputs($newItemName) && strcmp($currentItemName, $newItemName) != 0) {
+            if (!is_empty_input($newItemName) && strcmp($currentItemName, $newItemName) != 0) {
                 $update_item_name = "update totsandblocks.Item set itemName = '$newItemName' where itemCode = '$itemCode'";
                 $update_result = mysqli_query($con, $update_item_name);
                 if ($update_result) {
@@ -125,7 +125,7 @@ function updateItem($itemCode, $newItemName, $newItemCategory, $newItemComment)
                 echo "<br>Did not update item name.";
             }
 
-            if (!emptyInputs($newItemCategory) && strcmp($currentItemCategory, $newItemCategory) != 0) {
+            if (!is_empty_input($newItemCategory) && strcmp($currentItemCategory, $newItemCategory) != 0) {
                 $update_item_category = "update totsandblocks.Item set itemCategory = '$newItemCategory' where itemCode = '$itemCode'";
                 $update_result = mysqli_query($con, $update_item_category);
                 if ($update_result) {
@@ -137,7 +137,7 @@ function updateItem($itemCode, $newItemName, $newItemCategory, $newItemComment)
                 echo "<br>Did not update item category.";
             }
 
-            if (!emptyInputs($newItemComment) && strcmp($currentItemComment, $newItemComment) != 0) {
+            if (!is_empty_input($newItemComment) && strcmp($currentItemComment, $newItemComment) != 0) {
                 $update_item_comment = "update totsandblocks.Item set itemDescription = '$newItemComment' where itemCode = '$itemCode'";
                 $update_result = mysqli_query($con, $update_item_comment);
                 if ($update_result) {
@@ -154,7 +154,7 @@ function updateItem($itemCode, $newItemName, $newItemCategory, $newItemComment)
     }
 }
 
-function deleteItem($itemCode)
+function delete_item($itemCode)
 {
     global $con;
 
@@ -163,7 +163,7 @@ function deleteItem($itemCode)
         echo "<p style='color:blue'> Please select an item</p>";
         return;
     }
-    if (itemCodeReferenced($itemCode)) {
+    if (item_code_exist($itemCode)) {
         echo "<p style='color:red'>Did not delete item</p>";
     } else {
         $delete_sql = "delete from totsandblocks.Item where itemCode = '$itemCode'";
@@ -177,7 +177,7 @@ function deleteItem($itemCode)
 }
 
 # Display Items Table in Page
-function displayItems()
+function display_item_table()
 {
     global $con;
 
@@ -213,9 +213,9 @@ function displayItems()
     }
 }
 
-function duplicateCode($itemCode)
+function is_duplicate_code($itemCode)
 {
-    $codes_array = getItemCodes("Item");
+    $codes_array = get_item_codes("Item");
     if (in_array($itemCode, $codes_array)) {
         echo "<p style='color:red'>Error: Attempting to insert duplicate code.</p>";
         return true;
@@ -223,7 +223,7 @@ function duplicateCode($itemCode)
     return false;
 }
 
-function emptyInputs($input)
+function is_empty_input($input)
 {
     // check if entered input is empty
     $inputLen = strlen(trim($input));
@@ -233,9 +233,9 @@ function emptyInputs($input)
     return false;
 }
 
-function itemCodeReferenced($itemCode)
+function item_code_exist($itemCode)
 {
-    $codes_array = getItemCodes("Quantity");
+    $codes_array = get_item_codes("Quantity");
     if (in_array($itemCode, $codes_array)) {
         echo "<p style='color:red'>Error: Attempting to delete item that is still referenced in Quantity Table.</p>";
         return true;
@@ -243,22 +243,11 @@ function itemCodeReferenced($itemCode)
     return false;
 }
 
-function viewInventory($itemCategory, $itemLocation, $quantityComparison, $quantityNumber, $qSort, $nSort)
+function display_inventory($itemCategory, $itemLocation, $quantityComparison, $quantityNumber, $qSort, $nSort)
 {
     global $con;
 
-    $view_sql = "";
-    if ($itemCategory == "*" && $itemLocation == "*") {
-        $view_sql = viewEntireInventory();
-    } else {
-        if ($itemCategory == "*" && $itemLocation != "*") {
-            $view_sql = viewInventoryAllCategoriesSpecificLocation($itemLocation);
-        } else if ($itemCategory != "*" && $itemLocation == "*") {
-            $view_sql = viewInventorySpecificCategoryAllLocations($itemCategory);
-        } else {
-            $view_sql = viewInventorySpecifiedCategoryAndLocation($itemCategory, $itemLocation);
-        }
-    }
+    $view_sql = get_inventory_query($itemCategory, $itemLocation);
 
     // Add having clause for quantiy filtering
     $view_sql = $view_sql . " having quantity $quantityComparison $quantityNumber";
@@ -324,7 +313,27 @@ function viewInventory($itemCategory, $itemLocation, $quantityComparison, $quant
     }
 }
 
-function viewInventorySpecifiedCategoryAndLocation($itemCategory, $itemLocation)
+function get_inventory_query($itemCategory, $itemLocation)
+{
+    $view_sql = "select i.itemCode, i.itemName, c.categoryName as cName, q.quantity, l.locationName\n"
+        . "from totsandblocks.Item i , totsandblocks.Category c, totsandblocks.Quantity q, totsandblocks.Location l\n"
+        . "where c.categoryID = i.itemCategory and i.itemCode = q.itemCode and q.locationID = l.locationID";
+
+
+    if ($itemCategory == "*" && $itemLocation == "*") { # Get All Inventory Information
+        return $view_sql;
+    } else {
+        if ($itemCategory == "*" && $itemLocation != "*") { # Get Items of All Categories with Specified Location
+            $view_sql .= " and q.locationID = $itemLocation";
+        } else if ($itemCategory != "*" && $itemLocation == "*") { # Get Items of Both Locations with Specifed Category
+            $view_sql .= " and c.categoryID = $itemCategory";
+        } else { # Get Items that match Specified Location and Category
+            $view_sql .= "and c.categoryID = $itemCategory and q.locationID = $itemLocation";
+        }
+        return $view_sql;
+    }
+}
+function display_inventorySpecifiedCategoryAndLocation($itemCategory, $itemLocation)
 {
     $view_sql = "select i.itemCode, i.itemName, c.categoryName as cName, q.quantity, l.locationName\n"
         . "from totsandblocks.Item i , totsandblocks.Category c, totsandblocks.Quantity q, totsandblocks.Location l\n"
@@ -333,7 +342,7 @@ function viewInventorySpecifiedCategoryAndLocation($itemCategory, $itemLocation)
     return $view_sql;
 }
 
-function viewInventorySpecificCategoryAllLocations($itemCategory)
+function display_inventorySpecificCategoryAllLocations($itemCategory)
 {
     $view_sql = "select i.itemCode, i.itemName, c.categoryName as cName, q.quantity, l.locationName\n"
         . "from totsandblocks.Item i , totsandblocks.Category c, totsandblocks.Quantity q, totsandblocks.Location l\n"
@@ -342,7 +351,7 @@ function viewInventorySpecificCategoryAllLocations($itemCategory)
     return $view_sql;
 }
 
-function viewInventoryAllCategoriesSpecificLocation($itemLocation)
+function display_inventoryAllCategoriesSpecificLocation($itemLocation)
 {
     $view_sql = "select i.itemCode, i.itemName, c.categoryName as cName, q.quantity, l.locationName\n"
         . "from totsandblocks.Item i , totsandblocks.Category c, totsandblocks.Quantity q, totsandblocks.Location l\n"
@@ -378,7 +387,7 @@ function getLocations()
     }
 }
 
-function getItemNamesWithoutCompleteStockInfo()
+function get_item_namesWithoutCompleteStockInfo()
 {
     global $con;
 
@@ -406,7 +415,7 @@ function getItemNamesWithoutCompleteStockInfo()
 }
 
 # Insert Item Information to Quantity Table
-function insertItemStock($itemCode, $itemLocation, $itemQuantity, $user_id)
+function insert_itemStock($itemCode, $itemLocation, $itemQuantity, $user_id)
 {
     global $con;
 
@@ -480,7 +489,7 @@ function displayQuantityTable()
     }
 }
 
-function getItemNamesFromQuantityTable()
+function get_item_namesFromQuantityTable()
 {
     global $con;
 
@@ -502,7 +511,7 @@ function getItemNamesFromQuantityTable()
 }
 
 # Update Quantity of Matching Record[itemCode, itemLocation]
-function updateItemStock($itemCode, $itemLocation, $itemQuantity, $action)
+function update_itemStock($itemCode, $itemLocation, $itemQuantity, $action)
 {
     global $con;
     $itemQuantity = (int)$itemQuantity;
@@ -555,7 +564,7 @@ function greaterThanCurrentQuantity($itemCode, $itemLocation, $quantityToDelete)
     }
 }
 
-function deleteItemStock($itemCode, $itemLocation)
+function delete_itemStock($itemCode, $itemLocation)
 {
     global $con;
 

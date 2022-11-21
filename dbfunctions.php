@@ -2,11 +2,22 @@
 require('dbconfig.php');
 
 # Get Items' Names That Users Can Select From
-function get_item_names()
+function get_item_names($limiter = "all")
 {
     global $con;
-    //get the item names from items table
-    $items_sql = "select itemCode, itemName from totsandblocks.Item";
+    $items_sql = "";
+    if (strcmp($limiter, "all") == 0) { # For View Page Select Element
+        $items_sql = "select itemCode, itemName from totsandblocks.Item";
+    } else if (strcmp($limiter, "incomplete") == 0) { # For Stock Page Select Element
+        $items_sql = "select itemCode, itemName from totsandblocks.Item "
+            . " where itemCode not in (select itemCode from totsandblocks.Quantity "
+            . " group by itemCode having count(*) = 2)";
+    } else if (strcmp($limiter, "quantity" == 0)) {
+        $items_sql = "select DISTINCT i.itemCode, i.itemName "
+            . " from totsandblocks.Item i, totsandblocks.Quantity q "
+            . " where i.itemCode = q.itemCode";
+    }
+
     $items_results = mysqli_query($con, $items_sql);
 
     if ($items_results) {
@@ -333,43 +344,8 @@ function get_inventory_query($itemCategory, $itemLocation)
         return $view_sql;
     }
 }
-function display_inventorySpecifiedCategoryAndLocation($itemCategory, $itemLocation)
-{
-    $view_sql = "select i.itemCode, i.itemName, c.categoryName as cName, q.quantity, l.locationName\n"
-        . "from totsandblocks.Item i , totsandblocks.Category c, totsandblocks.Quantity q, totsandblocks.Location l\n"
-        . "where c.categoryID = i.itemCategory and i.itemCode = q.itemCode and q.locationID = l.locationID and c.categoryID = $itemCategory and q.locationID = $itemLocation";
 
-    return $view_sql;
-}
-
-function display_inventorySpecificCategoryAllLocations($itemCategory)
-{
-    $view_sql = "select i.itemCode, i.itemName, c.categoryName as cName, q.quantity, l.locationName\n"
-        . "from totsandblocks.Item i , totsandblocks.Category c, totsandblocks.Quantity q, totsandblocks.Location l\n"
-        . "where c.categoryID = i.itemCategory and i.itemCode = q.itemCode and q.locationID = l.locationID and c.categoryID = $itemCategory";
-
-    return $view_sql;
-}
-
-function display_inventoryAllCategoriesSpecificLocation($itemLocation)
-{
-    $view_sql = "select i.itemCode, i.itemName, c.categoryName as cName, q.quantity, l.locationName\n"
-        . "from totsandblocks.Item i , totsandblocks.Category c, totsandblocks.Quantity q, totsandblocks.Location l\n"
-        . "where c.categoryID = i.itemCategory and i.itemCode = q.itemCode and q.locationID = l.locationID and q.locationID = $itemLocation";
-
-    return $view_sql;
-}
-
-function viewEntireInventory()
-{
-    $view_sql = "select i.itemCode, i.itemName, c.categoryName as cName, q.quantity, l.locationName\n"
-        . "from totsandblocks.Item i , totsandblocks.Category c, totsandblocks.Quantity q, totsandblocks.Location l\n"
-        . "where c.categoryID = i.itemCategory and i.itemCode = q.itemCode and q.locationID = l.locationID";
-
-    return $view_sql;
-}
-
-function getLocations()
+function get_locations()
 {
     global $con;
 
@@ -387,35 +363,8 @@ function getLocations()
     }
 }
 
-function get_item_namesWithoutCompleteStockInfo()
-{
-    global $con;
-
-    // get the item names for items that don't have quantity stock information for both locations
-    // this include items that:
-    // 1. have no stock information whatsoever
-    // 2. have stock information for only one location
-    // This means exclude items that have two records in the quantity table
-    $items_sql = "select itemCode, itemName from totsandblocks.Item "
-        . " where itemCode not in (select itemCode from totsandblocks.Quantity "
-        . " group by itemCode having count(*) = 2)";
-
-    $items_results = mysqli_query($con, $items_sql);
-
-    if ($items_results) {
-        while ($items_row = mysqli_fetch_array($items_results)) {
-            $itemCode = $items_row['itemCode'];
-            $itemName = $items_row['itemName'];
-            echo "<option value='$itemCode'>$itemName</option>";
-        }
-        mysqli_free_result($items_results);
-    } else {
-        echo "Something is wrong with SQL: " . mysqli_error($con);
-    }
-}
-
 # Insert Item Information to Quantity Table
-function insert_itemStock($itemCode, $itemLocation, $itemQuantity, $user_id)
+function insert_item_stock($itemCode, $itemLocation, $itemQuantity, $user_id)
 {
     global $con;
 
@@ -437,7 +386,7 @@ function insert_itemStock($itemCode, $itemLocation, $itemQuantity, $user_id)
 }
 
 # Check if a record with same ItemCode + ItemLocation exists
-function checkIfComboExistsQuantityTable($itemCode, $itemLocation)
+function item_stock_info_exists($itemCode, $itemLocation)
 {
     global $con;
 
@@ -455,11 +404,11 @@ function checkIfComboExistsQuantityTable($itemCode, $itemLocation)
 }
 
 # Display Quantity Table
-function displayQuantityTable()
+function display_quantity_table()
 {
     global $con;
 
-    $view_sql = viewEntireInventory();
+    $view_sql = get_inventory_query("*", "*");
     $view_result = mysqli_query($con, $view_sql);
     if ($view_result) {
         $num_items = mysqli_num_rows($view_result);
@@ -489,38 +438,17 @@ function displayQuantityTable()
     }
 }
 
-function get_item_namesFromQuantityTable()
-{
-    global $con;
-
-    $items_sql = "select DISTINCT i.itemCode, i.itemName "
-        . " from totsandblocks.Item i, totsandblocks.Quantity q "
-        . " where i.itemCode = q.itemCode";
-    $items_results = mysqli_query($con, $items_sql);
-
-    if ($items_results) {
-        while ($items_row = mysqli_fetch_array($items_results)) {
-            $itemCode = $items_row['itemCode'];
-            $itemName = $items_row['itemName'];
-            echo "<option value='$itemCode'>$itemName</option>";
-        }
-        mysqli_free_result($items_results);
-    } else {
-        echo "Something is wrong with SQL: " . mysqli_error($con);
-    }
-}
-
 # Update Quantity of Matching Record[itemCode, itemLocation]
-function update_itemStock($itemCode, $itemLocation, $itemQuantity, $action)
+function update_item_stock($itemCode, $itemLocation, $itemQuantity, $action)
 {
     global $con;
     $itemQuantity = (int)$itemQuantity;
-    $currentQuantity = getCurrentQuantity($itemCode, $itemLocation);
+    $currentQuantity = get_current_quantity($itemCode, $itemLocation);
     $new_quantity = 0;
 
     //if action is delete and quantityToDelete is <= existing quantity
     if ($action == 'del') {
-        if (greaterThanCurrentQuantity($itemCode, $itemLocation, $itemQuantity)) {
+        if (greater_than_current_quantity($itemCode, $itemLocation, $itemQuantity)) {
             echo "Existing quantity is less than quantity to delete. <br>";
             return;
         }
@@ -538,7 +466,7 @@ function update_itemStock($itemCode, $itemLocation, $itemQuantity, $action)
     }
 }
 
-function getCurrentQuantity($itemCode, $itemLocation)
+function get_current_quantity($itemCode, $itemLocation)
 {
     global $con;
 
@@ -553,9 +481,9 @@ function getCurrentQuantity($itemCode, $itemLocation)
         return -1;
     }
 }
-function greaterThanCurrentQuantity($itemCode, $itemLocation, $quantityToDelete)
+function greater_than_current_quantity($itemCode, $itemLocation, $quantityToDelete)
 {
-    $currentQuantity = getCurrentQuantity($itemCode, $itemLocation);
+    $currentQuantity = get_current_quantity($itemCode, $itemLocation);
     # check if quantity to delete is greater than current quantity
     if ($quantityToDelete > $currentQuantity) {
         return true; # we cannot delete from existing quantity
@@ -564,7 +492,7 @@ function greaterThanCurrentQuantity($itemCode, $itemLocation, $quantityToDelete)
     }
 }
 
-function delete_itemStock($itemCode, $itemLocation)
+function delete_item_stock($itemCode, $itemLocation)
 {
     global $con;
 

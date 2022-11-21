@@ -8,11 +8,11 @@ function get_item_names(string $limiter = "all")
     $items_sql = "";
     if (strcmp($limiter, "all") == 0) { # For View Page Select Element
         $items_sql = "select itemCode, itemName from totsandblocks.Item";
-    } else if (strcmp($limiter, "incomplete") == 0) { # For Stock Page Select Element
+    } else if (strcmp($limiter, "incomplete") == 0) { # For Stock Page - Add Item Stock Select Element
         $items_sql = "select itemCode, itemName from totsandblocks.Item "
             . " where itemCode not in (select itemCode from totsandblocks.Quantity "
             . " group by itemCode having count(*) = 2)";
-    } else if (strcmp($limiter, "quantity" == 0)) {
+    } else if (strcmp($limiter, "quantity" == 0)) { # For Stock Page - Update & Delete Item Stock Select Elements
         $items_sql = "select DISTINCT i.itemCode, i.itemName "
             . " from totsandblocks.Item i, totsandblocks.Quantity q "
             . " where i.itemCode = q.itemCode";

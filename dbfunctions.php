@@ -22,9 +22,9 @@ function get_item_names(string $limiter = "all")
 
     if ($items_results) {
         while ($items_row = mysqli_fetch_array($items_results)) {
-            $itemCode = $items_row['itemCode'];
-            $itemName = $items_row['itemName'];
-            echo "<option value='$itemCode'>$itemName</option>";
+            $item_code = $items_row['itemCode'];
+            $item_name = $items_row['itemName'];
+            echo "<option value='$item_code'>$item_name</option>";
         }
         mysqli_free_result($items_results);
     } else {
@@ -42,9 +42,9 @@ function get_item_categories()
 
     if ($category_results) {
         while ($category_row = mysqli_fetch_array($category_results)) {
-            $categoryID = $category_row['categoryID'];
-            $categoryName = $category_row['categoryName'];
-            echo "<option value='$categoryID'>$categoryName</option>";
+            $category_id = $category_row['categoryID'];
+            $category_name = $category_row['categoryName'];
+            echo "<option value='$category_id'>$category_name</option>";
         }
         mysqli_free_result($category_results);
     } else {
@@ -85,18 +85,18 @@ function get_item_codes(string $table)
 }
 
 # Insert Item Info to Item Table
-function insert_item_info(string $itemCode, string $itemName, string $itemCategory, string $itemComment, string $user_id)
+function insert_item_info(string $item_code, string $item_name, string $item_category, string $item_comment, string $user_id)
 {
     global $con;
 
     // check if item code is not duplicated or amount entered is not valid input
-    if (is_duplicate_code($itemCode)) {
+    if (is_duplicate_code($item_code)) {
         echo "<p style='color:red'>Did not insert item</p>";
     } else {
-        $insert_sql = "insert into totsandblocks.Item values ('$itemCode', '$itemName', '$itemCategory', '$itemComment', '$user_id')";
+        $insert_sql = "insert into totsandblocks.Item values ('$item_code', '$item_name', '$item_category', '$item_comment', '$user_id')";
         $insert_result = mysqli_query($con, $insert_sql);
         if ($insert_result) {
-            echo "<br>Item Code: ($itemCode) has been inserted successfully.";
+            echo "<br>Item Code: ($item_code) has been inserted successfully.";
         } else {
             echo "Something is wrong with insertion SQL: " . mysqli_error($con);
         }
@@ -104,12 +104,12 @@ function insert_item_info(string $itemCode, string $itemName, string $itemCatego
 }
 
 # Update Item Info in Item Table
-function update_item_info(string $itemCode, string $newItemName, string $newItemCategory, string $newItemComment)
+function update_item_info(string $item_code, string $new_item_name, string $new_item_category, string $new_item_comment)
 {
     global $con;
 
     // get the current information of the item
-    $current_item_info_sql = "select * from totsandblocks.Item where itemCode = '$itemCode'";
+    $current_item_info_sql = "select * from totsandblocks.Item where itemCode = '$item_code'";
     $current_results = mysqli_query($con, $current_item_info_sql);
 
     if ($current_results) {
@@ -120,13 +120,13 @@ function update_item_info(string $itemCode, string $newItemName, string $newItem
             echo "Returned more than one item's information";
         } else {
             $item_row = mysqli_fetch_array($current_results);
-            $currentItemName = $item_row['itemName'];
-            $currentItemCategory = $item_row['itemCategory'];
-            $currentItemComment = $item_row['itemDescription'];
+            $current_item_name = $item_row['itemName'];
+            $current_item_category = $item_row['itemCategory'];
+            $current_item_comment = $item_row['itemDescription'];
 
             // check if inputs are empty and if they're equal to the current item info
-            if (!is_empty_input($newItemName) && strcmp($currentItemName, $newItemName) != 0) {
-                $update_item_name = "update totsandblocks.Item set itemName = '$newItemName' where itemCode = '$itemCode'";
+            if (!is_empty_input($new_item_name) && strcmp($current_item_name, $new_item_name) != 0) {
+                $update_item_name = "update totsandblocks.Item set itemName = '$new_item_name' where itemCode = '$item_code'";
                 $update_result = mysqli_query($con, $update_item_name);
                 if ($update_result) {
                     echo "<br>Updated Item Name.";
@@ -137,8 +137,8 @@ function update_item_info(string $itemCode, string $newItemName, string $newItem
                 echo "<br>Did not update item name.";
             }
 
-            if (!is_empty_input($newItemCategory) && strcmp($currentItemCategory, $newItemCategory) != 0) {
-                $update_item_category = "update totsandblocks.Item set itemCategory = '$newItemCategory' where itemCode = '$itemCode'";
+            if (!is_empty_input($new_item_category) && strcmp($current_item_category, $new_item_category) != 0) {
+                $update_item_category = "update totsandblocks.Item set itemCategory = '$new_item_category' where itemCode = '$item_code'";
                 $update_result = mysqli_query($con, $update_item_category);
                 if ($update_result) {
                     echo "<br>Updated Item Category.";
@@ -149,8 +149,8 @@ function update_item_info(string $itemCode, string $newItemName, string $newItem
                 echo "<br>Did not update item category.";
             }
 
-            if (!is_empty_input($newItemComment) && strcmp($currentItemComment, $newItemComment) != 0) {
-                $update_item_comment = "update totsandblocks.Item set itemDescription = '$newItemComment' where itemCode = '$itemCode'";
+            if (!is_empty_input($new_item_comment) && strcmp($current_item_comment, $new_item_comment) != 0) {
+                $update_item_comment = "update totsandblocks.Item set itemDescription = '$new_item_comment' where itemCode = '$item_code'";
                 $update_result = mysqli_query($con, $update_item_comment);
                 if ($update_result) {
                     echo "<br>Updated Item Description.";
@@ -167,22 +167,22 @@ function update_item_info(string $itemCode, string $newItemName, string $newItem
 }
 
 # Delete Item Info from Item Table
-function delete_item_info(string $itemCode)
+function delete_item_info(string $item_code)
 {
     global $con;
 
-    // check if $itemCode is in quantity
-    if (empty($itemCode)) {
+    // check if $item_code is in quantity
+    if (empty($item_code)) {
         echo "<p style='color:blue'> Please select an item</p>";
         return;
     }
-    if (item_code_exist($itemCode)) {
+    if (item_code_exist($item_code)) {
         echo "<p style='color:red'>Did not delete item</p>";
     } else {
-        $delete_sql = "delete from totsandblocks.Item where itemCode = '$itemCode'";
+        $delete_sql = "delete from totsandblocks.Item where itemCode = '$item_code'";
         $delete_sql = mysqli_query($con, $delete_sql);
         if ($delete_sql) {
-            echo "<br>Item Code: ($itemCode) has been deleted successfully.";
+            echo "<br>Item Code: ($item_code) has been deleted successfully.";
         } else {
             echo "Something is wrong with deletion SQL: " . mysqli_error($con);
         }
@@ -208,13 +208,13 @@ function display_item_table()
             echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Comment</th><th>Added By</th><tr>";
 
             while ($items_row = mysqli_fetch_array($items_results)) {
-                $itemCode = $items_row['itemCode'];
-                $itemName = $items_row['itemName'];
-                $itemCategory = $items_row['cName'];
-                $itemDesc = $items_row['itemDescription'];
-                $addedBy = $items_row['fName'];
+                $item_code = $items_row['itemCode'];
+                $item_name = $items_row['itemName'];
+                $item_category = $items_row['cName'];
+                $item_desc = $items_row['itemDescription'];
+                $added_by = $items_row['fName'];
 
-                echo "<tr><td>$itemCode</td><td>$itemName</td><td>$itemCategory</td><td>$itemDesc</td><td>$addedBy</td></tr>";
+                echo "<tr><td>$item_code</td><td>$item_name</td><td>$item_category</td><td>$item_desc</td><td>$added_by</td></tr>";
             }
 
             echo "</tbody>";
@@ -226,10 +226,10 @@ function display_item_table()
     }
 }
 
-function is_duplicate_code(string $itemCode)
+function is_duplicate_code(string $item_code)
 {
     $codes_array = get_item_codes("Item");
-    if (in_array($itemCode, $codes_array)) {
+    if (in_array($item_code, $codes_array)) {
         echo "<p style='color:red'>Error: Attempting to insert duplicate code.</p>";
         return true;
     }
@@ -246,33 +246,33 @@ function is_empty_input(string $input)
     return false;
 }
 
-function item_code_exist(string $itemCode)
+function item_code_exist(string $item_code)
 {
     $codes_array = get_item_codes("Quantity");
-    if (in_array($itemCode, $codes_array)) {
+    if (in_array($item_code, $codes_array)) {
         echo "<p style='color:red'>Error: Attempting to delete item that is still referenced in Quantity Table.</p>";
         return true;
     }
     return false;
 }
 
-function display_inventory(string $itemCategory, string $itemLocation, string $quantityComparison, string $quantityNumber, string $qSort, string $nSort)
+function display_inventory(string $item_category, string $item_location, string $quantity_comparison, string $quantity_number, string $qty_sort, string $name_sort)
 {
     global $con;
 
-    $view_sql = get_inventory_query($itemCategory, $itemLocation);
+    $view_sql = get_inventory_query($item_category, $item_location);
 
     // Add having clause for quantiy filtering
-    $view_sql = $view_sql . " having quantity $quantityComparison $quantityNumber";
+    $view_sql = $view_sql . " having quantity $quantity_comparison $quantity_number";
 
 
     // Add additional criteria to SQL statement
-    if (strcmp($qSort, "q-none") != 0 || strcmp($nSort, "n-none") != 0) {
+    if (strcmp($qty_sort, "q-none") != 0 || strcmp($name_sort, "n-none") != 0) {
         $view_sql = $view_sql . " order by ";
 
         // Add correct quantity sort, and check if we need a comma for next criteria
-        if (strcmp($qSort, "q-none") != 0) {
-            if (strcmp($qSort, "q-asc")) {
+        if (strcmp($qty_sort, "q-none") != 0) {
+            if (strcmp($qty_sort, "q-asc")) {
                 $view_sql = $view_sql . " quantity asc, ";
             } else {
                 $view_sql = $view_sql . " quantity desc, ";
@@ -280,8 +280,8 @@ function display_inventory(string $itemCategory, string $itemLocation, string $q
         }
 
         // Add correct itemName sort
-        if (strcmp($nSort, "n-none") != 0) {
-            if (strcmp($nSort, "n-asc") == 0) {
+        if (strcmp($name_sort, "n-none") != 0) {
+            if (strcmp($name_sort, "n-asc") == 0) {
                 $view_sql = $view_sql . " itemName asc ";
             } else {
                 $view_sql = $view_sql . " itemName desc";
@@ -306,13 +306,13 @@ function display_inventory(string $itemCategory, string $itemLocation, string $q
             echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Quantity</th><th>Location</th><tr>";
 
             while ($view_row = mysqli_fetch_array($view_result)) {
-                $itemCode = $view_row['itemCode'];
-                $itemName = $view_row['itemName'];
-                $itemCategory = $view_row['cName'];
-                $itemQuantity = $view_row['quantity'];
+                $item_code = $view_row['itemCode'];
+                $item_name = $view_row['itemName'];
+                $item_category = $view_row['cName'];
+                $item_quantity = $view_row['quantity'];
                 $location = $view_row['locationName'];
 
-                echo "<tr><td>$itemCode</td><td>$itemName</td><td>$itemCategory</td><td>$itemQuantity</td><td>$location</td></tr>";
+                echo "<tr><td>$item_code</td><td>$item_name</td><td>$item_category</td><td>$item_quantity</td><td>$location</td></tr>";
             }
 
             echo "</tbody>";
@@ -326,22 +326,22 @@ function display_inventory(string $itemCategory, string $itemLocation, string $q
     }
 }
 
-function get_inventory_query(string $itemCategory, string $itemLocation)
+function get_inventory_query(string $item_category, string $item_location)
 {
     $view_sql = "select i.itemCode, i.itemName, c.categoryName as cName, q.quantity, l.locationName\n"
         . "from totsandblocks.Item i , totsandblocks.Category c, totsandblocks.Quantity q, totsandblocks.Location l\n"
         . "where c.categoryID = i.itemCategory and i.itemCode = q.itemCode and q.locationID = l.locationID";
 
 
-    if ($itemCategory == "*" && $itemLocation == "*") { # Get All Inventory Information
+    if ($item_category == "*" && $item_location == "*") { # Get All Inventory Information
         return $view_sql;
     } else {
-        if ($itemCategory == "*" && $itemLocation != "*") { # Get Items of All Categories with Specified Location
-            $view_sql .= " and q.locationID = $itemLocation";
-        } else if ($itemCategory != "*" && $itemLocation == "*") { # Get Items of Both Locations with Specifed Category
-            $view_sql .= " and c.categoryID = $itemCategory";
+        if ($item_category == "*" && $item_location != "*") { # Get Items of All Categories with Specified Location
+            $view_sql .= " and q.locationID = $item_location";
+        } else if ($item_category != "*" && $item_location == "*") { # Get Items of Both Locations with Specifed Category
+            $view_sql .= " and c.categoryID = $item_category";
         } else { # Get Items that match Specified Location and Category
-            $view_sql .= "and c.categoryID = $itemCategory and q.locationID = $itemLocation";
+            $view_sql .= "and c.categoryID = $item_category and q.locationID = $item_location";
         }
         return $view_sql;
     }
@@ -366,21 +366,21 @@ function get_locations()
 }
 
 # Insert Item Information to Quantity Table
-function insert_item_stock(string $itemCode, string $itemLocation, string $itemQuantity, string $user_id)
+function insert_item_stock(string $item_code, string $item_location, string $item_quantity, string $user_id)
 {
     global $con;
 
-    if (!is_numeric($itemQuantity)) {
+    if (!is_numeric($item_quantity)) {
         echo "Quantity is not a number.";
     } else {
-        // echo "Item Code: $itemCode <br>";
-        // echo "Item Quantity: $itemQuantity <br>";
-        // echo "Item Location: $itemLocation <br>";
+        // echo "Item Code: $item_code <br>";
+        // echo "Item Quantity: $item_quantity <br>";
+        // echo "Item Location: $item_location <br>";
         // echo "User ID: $user_id";
-        $insert_sql = "insert into totsandblocks.Quantity (itemCode, quantity, locationID, addedBy) values ('$itemCode', $itemQuantity, $itemLocation, '$user_id')";
+        $insert_sql = "insert into totsandblocks.Quantity (itemCode, quantity, locationID, addedBy) values ('$item_code', $item_quantity, $item_location, '$user_id')";
         $insert_result = mysqli_query($con, $insert_sql);
         if ($insert_result) {
-            echo "<br>Quantity information for Item Code: ($itemCode) has been inserted successfully.";
+            echo "<br>Quantity information for Item Code: ($item_code) has been inserted successfully.";
         } else {
             echo "Something is wrong with insertion to quantity table SQL: " . mysqli_error($con);
         }
@@ -388,11 +388,11 @@ function insert_item_stock(string $itemCode, string $itemLocation, string $itemQ
 }
 
 # Check if a record with same ItemCode + ItemLocation exists
-function item_stock_info_exists(string $itemCode, string $itemLocation)
+function item_stock_info_exists(string $item_code, string $item_location)
 {
     global $con;
 
-    $check_sql = "select * from totsandblocks.Quantity where itemCode = '$itemCode' and locationID = '$itemLocation'";
+    $check_sql = "select * from totsandblocks.Quantity where itemCode = '$item_code' and locationID = '$item_location'";
     $check_results = mysqli_query($con, $check_sql);
 
     if ($check_results) {
@@ -422,13 +422,13 @@ function display_quantity_table()
             echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Quantity</th><th>Location</th><tr>";
 
             while ($view_row = mysqli_fetch_array($view_result)) {
-                $itemCode = $view_row['itemCode'];
-                $itemName = $view_row['itemName'];
-                $itemCategory = $view_row['cName'];
-                $itemQuantity = $view_row['quantity'];
+                $item_code = $view_row['itemCode'];
+                $item_name = $view_row['itemName'];
+                $item_category = $view_row['cName'];
+                $item_quantity = $view_row['quantity'];
                 $location = $view_row['locationName'];
 
-                echo "<tr><td>$itemCode</td><td>$itemName</td><td>$itemCategory</td><td>$itemQuantity</td><td>$location</td></tr>";
+                echo "<tr><td>$item_code</td><td>$item_name</td><td>$item_category</td><td>$item_quantity</td><td>$location</td></tr>";
             }
 
             echo "</tbody>";
@@ -441,25 +441,25 @@ function display_quantity_table()
 }
 
 # Update Quantity of Matching Record[itemCode, itemLocation]
-function update_item_stock(string $itemCode, string $itemLocation, string $itemQuantity, string $action)
+function update_item_stock(string $item_code, string $item_location, string $item_quantity, string $action)
 {
     global $con;
-    $itemQuantity = (int)$itemQuantity;
-    $currentQuantity = get_current_quantity($itemCode, $itemLocation);
+    $item_quantity = (int)$item_quantity;
+    $currentQuantity = get_current_quantity($item_code, $item_location);
     $new_quantity = 0;
 
     //if action is delete and quantityToDelete is <= existing quantity
     if ($action == 'del') {
-        if (greater_than_current_quantity($itemCode, $itemLocation, $itemQuantity)) {
+        if (greater_than_current_quantity($item_code, $item_location, $item_quantity)) {
             echo "Existing quantity is less than quantity to delete. <br>";
             return;
         }
-        $new_quantity = $currentQuantity - $itemQuantity;
+        $new_quantity = $currentQuantity - $item_quantity;
     } else if ($action == 'add') {
-        $new_quantity = $currentQuantity + $itemQuantity;
+        $new_quantity = $currentQuantity + $item_quantity;
     }
 
-    $update_sql = "update totsandblocks.Quantity set quantity = '$new_quantity' where itemCode = '$itemCode' and locationID = '$itemLocation'";
+    $update_sql = "update totsandblocks.Quantity set quantity = '$new_quantity' where itemCode = '$item_code' and locationID = '$item_location'";
     $update_result = mysqli_query($con, $update_sql);
     if ($update_result) {
         echo "<br>Updated Item Quantity.";
@@ -468,11 +468,11 @@ function update_item_stock(string $itemCode, string $itemLocation, string $itemQ
     }
 }
 
-function get_current_quantity(string $itemCode, string $itemLocation)
+function get_current_quantity(string $item_code, string $item_location)
 {
     global $con;
 
-    $sql = "select quantity from totsandblocks.Quantity where itemCode = '$itemCode' and locationID = '$itemLocation'";
+    $sql = "select quantity from totsandblocks.Quantity where itemCode = '$item_code' and locationID = '$item_location'";
     $sql_result = mysqli_query($con, $sql);
 
     if ($sql_result) {
@@ -483,9 +483,9 @@ function get_current_quantity(string $itemCode, string $itemLocation)
         return -1;
     }
 }
-function greater_than_current_quantity(string $itemCode, string $itemLocation, string $quantityToDelete)
+function greater_than_current_quantity(string $item_code, string $item_location, string $quantityToDelete)
 {
-    $currentQuantity = get_current_quantity($itemCode, $itemLocation);
+    $currentQuantity = get_current_quantity($item_code, $item_location);
     # check if quantity to delete is greater than current quantity
     if ($quantityToDelete > $currentQuantity) {
         return true; # we cannot delete from existing quantity
@@ -494,15 +494,15 @@ function greater_than_current_quantity(string $itemCode, string $itemLocation, s
     }
 }
 
-function delete_item_stock(string $itemCode, string $itemLocation)
+function delete_item_stock(string $item_code, string $item_location)
 {
     global $con;
 
-    $sql = "delete from totsandblocks.Quantity where itemCode = '$itemCode' and locationID = '$itemLocation'";
+    $sql = "delete from totsandblocks.Quantity where itemCode = '$item_code' and locationID = '$item_location'";
     $sql_result = mysqli_query($con, $sql);
 
     if ($sql_result) {
-        echo "Successfully deleted record with Item Code: $itemCode and Location ID: $itemLocation";
+        echo "Successfully deleted record with Item Code: $item_code and Location ID: $item_location";
     } else {
         echo "Something is wrong with delete item stock SQL: " . mysqli_error($con);
     }

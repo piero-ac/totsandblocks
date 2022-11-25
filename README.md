@@ -10,8 +10,30 @@ The application will address the following problems that the owner currently exp
 * Delay in activities due to supply shortage.
 
 ## Features
-The application allows the owner to 
+The application allows the owner to manage items and their stock information, and view and print
+reports of the inventory based on the owner's given criteria.
 
+### Manage Items
+To accurately maintain records of the items available at the Tots and Blocks location; the application
+will allow the owner to add new item information, update the existing information of items, and delete items that
+will no longer be stored at either location. 
+
+### Manage Stock
+After adding new item information, the owner will then be able to add new stock information for that item,
+update the stock information of existing items, and delete stock information of items that will no longer
+be stored at either location. To ensure the integrity of the database information, we prevent the owner
+from deleting item information before first deleting the stock information of an item.
+
+### View and Print Reports
+The application allows the owner to view the items that match certain criteria (specified by the owner) and if they'd like,
+print a report of the search results. This feature allows the owner to quickly finds that are in low-stock, out-of-stock, and sort the results by quantity or name.
+
+## Technologies
+The application is being built using:
+* HTML
+* CSS
+* PHP
+* MySQL
 
 ## How to Run Locally
 ### Prerequisites 
@@ -42,7 +64,12 @@ The application allows the owner to
     * Password: test123
 3. You should now be logged in.
 
-### Read User Manual
+## User Manual
 The User Manual will help the user learn how to use the application. 
 User Manual is located at the following link:
 https://docs.google.com/document/d/1aRXTmHYL4OCiGaI48OBdd4HlkO6NuMlemQbIzMV0-pM/edit 
+
+## Credits
+This application was developed by Keval Barvaliya, Damian Lewocha, Piero Coronado.
+For the owner of Tots and Blocks, Mr. Bharat.
+We'd like to thank the team, the client, and Dr. Morreale for their assistance in completing this project.

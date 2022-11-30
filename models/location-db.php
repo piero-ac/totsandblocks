@@ -1,6 +1,6 @@
 <?php
 
-require("dbconfig.php");
+require_once "../misc/dbconfig.php";
 
 /**
  * Get locations for items

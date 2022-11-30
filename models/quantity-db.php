@@ -1,8 +1,7 @@
 <?php
 
-require("dbconfig.php");
-require("view-db.php");
-
+require_once "../misc/dbconfig.php";
+require_once "../Models/view-db.php";
 
 /**
  * Get items codes from the Quantity Table

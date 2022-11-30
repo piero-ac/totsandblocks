@@ -54,12 +54,12 @@ require_once "../Models/category-db.php";
                 <p><input type="submit" value="Add Item"></p>
                 <?php
                 if (isset($_POST['item_code'], $_POST['item_name'], $_POST['item_category'])) {
-                    $itemCode = $_POST['item_code'];
-                    $itemName = $_POST['item_name'];
-                    $itemCategory = $_POST['item_category'];
-                    $itemComment = $_POST['item_comment'];
+                    $item_code = $_POST['item_code'];
+                    $item_name = $_POST['item_name'];
+                    $item_category = $_POST['item_category'];
+                    $item_comment = $_POST['item_comment'];
 
-                    insert_item_info($itemCode, $itemName, $itemCategory, $itemComment, $user_id);
+                    insert_item_info($item_code, $item_name, $item_category, $item_comment, $user_id);
                 }
                 ?>
             </form>
@@ -91,13 +91,13 @@ require_once "../Models/category-db.php";
                 <p><input type="submit" value="Update Item" name="btnSubmitUpdate"></p>
                 <?php
                 if (isset($_POST['btnSubmitUpdate'])) {
-                    $itemCodeToUpdate = $_POST['item_update'];
-                    $newItemName = $_POST['new_item_name'];
-                    $newItemCategory = $_POST['new_item_category'];
-                    $newItemComment = $_POST['new_item_comment'];
+                    $item_code_to_update = $_POST['item_update'];
+                    $new_item_name = $_POST['new_item_name'];
+                    $new_item_category = $_POST['new_item_category'];
+                    $new_item_comment = $_POST['new_item_comment'];
 
                     if (!empty($itemCodeToUpdate))
-                        update_item_info($itemCodeToUpdate, $newItemName, $newItemCategory, $newItemComment);
+                        update_item_info($item_code_to_update, $new_item_name, $new_item_category,  $new_item_comment);
                     else
                         echo "Please select an item first.";
                 }
@@ -120,8 +120,8 @@ require_once "../Models/category-db.php";
                 <p><input type="submit" value="Delete Item" name="btnSubmitDelete"></p>
                 <?php
                 if (isset($_POST['btnSubmitDelete'])) {
-                    $itemCodeToDelete = $_POST['item_delete'];
-                    delete_item_info($itemCodeToDelete);
+                    $item_code_to_delete = $_POST['item_delete'];
+                    delete_item_info($item_code_to_delete);
                 }
 
                 ?>

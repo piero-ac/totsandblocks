@@ -53,13 +53,13 @@ require_once "../Models/location-db.php";
                 <p><input type="submit" value="Insert Item Info" name="btnSubmitInsert"></p>
                 <?php
                 if (isset($_POST['btnSubmitInsert'])) {
-                    $itemCode = $_POST['item_insert_code'];
-                    $itemLocation = $_POST['item_insert_location'];
-                    $itemQuantity = $_POST['item_insert_quantity'];
-                    if (item_stock_info_exists($itemCode, $itemLocation)) {
+                    $item_code = $_POST['item_insert_code'];
+                    $item_location = $_POST['item_insert_location'];
+                    $item_quantity = $_POST['item_insert_quantity'];
+                    if (item_stock_info_exists($item_code, $item_location)) {
                         echo "There is already a record with same Item Code + Location";
                     } else {
-                        insert_item_stock($itemCode, $itemLocation, $itemQuantity, $user_id);
+                        insert_item_stock($item_code, $item_location, $item_quantity, $user_id);
                     }
                 }
                 ?>
@@ -93,11 +93,11 @@ require_once "../Models/location-db.php";
                 <p><input type="submit" value="Update Item Info" name="btnSubmitUpdate"></p>
                 <?php
                 if (isset($_POST['btnSubmitUpdate'])) {
-                    $itemCode = $_POST['item_update_code'];
-                    $itemLocation = $_POST['item_update_location'];
-                    $itemQuantity = $_POST['item_update_quantity'];
+                    $item_code = $_POST['item_update_code'];
+                    $item_location = $_POST['item_update_location'];
+                    $item_quantity = $_POST['item_update_quantity'];
                     $action = $_POST['update_action'];
-                    if (!item_stock_info_exists($itemCode, $itemLocation)) {
+                    if (!item_stock_info_exists($item_code, $item_location)) {
                         echo "There is no record with the specified item name and location";
                     } else {
                         // echo "Item Info to Update <br>";
@@ -105,7 +105,7 @@ require_once "../Models/location-db.php";
                         // echo "Item Location: $itemLocation <br>";
                         // echo "Item Quantity: $itemQuantity <br>";
                         // echo "Will $action <br>";
-                        update_item_stock($itemCode, $itemLocation, $itemQuantity, $action);
+                        update_item_stock($item_code, $item_location, $item_quantity, $action);
                     }
                 }
                 ?>
@@ -131,12 +131,12 @@ require_once "../Models/location-db.php";
                 <p><input type="submit" value="Delete Item Info" name="btnSubmitDelete"></p>
                 <?php
                 if (isset($_POST['btnSubmitDelete'])) {
-                    $itemCode = $_POST['item_delete_code'];
-                    $itemLocation = $_POST['item_delete_location'];
-                    if (!item_stock_info_exists($itemCode, $itemLocation)) {
+                    $item_code = $_POST['item_delete_code'];
+                    $item_location = $_POST['item_delete_location'];
+                    if (!item_stock_info_exists($item_code, $item_location)) {
                         echo "There is no record with the specified item name and location";
                     } else {
-                        delete_item_stock($itemCode, $itemLocation);
+                        delete_item_stock($item_code, $item_location);
                     }
                 }
                 ?>

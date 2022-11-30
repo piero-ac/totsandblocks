@@ -112,7 +112,7 @@
                 <h2>Manage Items</h2>
                 <p>Click below to Add or Delete Items</p>
                 <p>*Items need to be added before entering the items stock information*</p>
-                <form action="item_actions.php" method="POST">
+                <form action="./item_actions.php" method="POST">
                     <input type="hidden" name="customer_name" value="$name">
                     <input type="submit" value="Manage Items">
                 </form>
@@ -120,7 +120,7 @@
             <section id="view-actions">
                 <h2>View Inventory Information</h2>
                 <p>Click below to View Inventory by Category, Location, etc</p>
-                <form action="view_actions.php">
+                <form action="./view_actions.php">
                     <input type="hidden" name="customer_name" value="$name">
                     <input type="submit" value="View Inventory">
                 </form>

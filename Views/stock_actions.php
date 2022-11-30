@@ -1,5 +1,5 @@
 <?php
-// Provides the database configuration
+// Provides the database login
 require_once "../misc/dbconfig.php";
 
 // Provides functions for manipulating stock

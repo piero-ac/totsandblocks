@@ -1,6 +1,8 @@
 <?php
-
+// Provides the database login
 require_once "../misc/dbconfig.php";
+
+// Provides the functions necessary from view-db.php
 require_once "../Models/view-db.php";
 
 /**

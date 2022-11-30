@@ -1,5 +1,6 @@
 <?php
 
+// Provides the database login
 require_once "../misc/dbconfig.php";
 
 /**

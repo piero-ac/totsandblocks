@@ -1,6 +1,6 @@
 <?php
-
-require("dbconfig.php");
+// Provides the database login
+require_once "../misc/dbconfig.php";
 
 /**
  * Get categories for items

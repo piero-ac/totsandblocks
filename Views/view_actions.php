@@ -1,3 +1,13 @@
+<?php
+// Provides the database login
+require_once "../misc/dbconfig.php";
+
+// Provides functions for manipulating item information
+require_once "../Models/category-db.php";
+require_once "../Models/location-db.php";
+require_once "../Models/view-db.php";
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 

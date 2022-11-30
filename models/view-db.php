@@ -1,4 +1,6 @@
 <?php
+// Provides the database login
+require_once "../misc/dbconfig.php";
 
 /**
  * Get Inventory Query
@@ -56,7 +58,7 @@ function display_inventory(string $item_category, string $item_location, string 
 
     // Add having clause for quantiy filtering
     $view_sql = $view_sql . " having quantity $quantity_comparison $quantity_number";
-    echo "$view_sql <br>";
+    // echo "$view_sql <br>";
 
 
     // Add additional criteria to SQL statement
@@ -88,6 +90,7 @@ function display_inventory(string $item_category, string $item_location, string 
     //echo "$view_sql <br>";
 
     $view_result = mysqli_query($con, $view_sql);
+
     if ($view_result) {
         $num_items = mysqli_num_rows($view_result);
         if ($num_items == 0) {

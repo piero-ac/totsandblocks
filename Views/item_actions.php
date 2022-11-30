@@ -1,3 +1,12 @@
+<?php
+// Provides the database login
+require_once "../misc/dbconfig.php";
+
+// Provides functions for manipulating item info
+require_once "../Models/item-db.php";
+require_once "../Models/category-db.php";
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +15,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Items</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../style.css">
 </head>
 
 <body>
@@ -17,7 +26,6 @@
         die;
     }
     $user_id = $_COOKIE['userID'];
-    include "../misc/dbconfig.php";
 
     ?>
     <a href='login.php'>Back to Homepage</a>

@@ -96,7 +96,7 @@ require_once "../Models/category-db.php";
                     $new_item_category = $_POST['new_item_category'];
                     $new_item_comment = $_POST['new_item_comment'];
 
-                    if (!empty($itemCodeToUpdate))
+                    if (!empty($item_code_to_update))
                         update_item_info($item_code_to_update, $new_item_name, $new_item_category,  $new_item_comment);
                     else
                         echo "Please select an item first.";

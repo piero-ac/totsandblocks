@@ -111,18 +111,18 @@ require_once "../Models/view-db.php";
                 <p><input type="submit" value="Search" name="btnSearch"></p>
                 <?php
                 if (isset($_POST['btnSearch'])) {
-                    $itemCategory = $_POST['item_category'];
-                    $itemLocation = $_POST['item_location'];
-                    $quantityComparison = $_POST['comparison_op'];
-                    $quantityNumber = $_POST['quantity-filter'];
-                    $quantitySort = $_POST['quantity-sort'];
-                    $nameSort = $_POST['name-sort'];
+                    $item_category = $_POST['item_category'];
+                    $item_location = $_POST['item_location'];
+                    $quantity_comparison = $_POST['comparison_op'];
+                    $quantity_number = $_POST['quantity-filter'];
+                    $quantity_sort = $_POST['quantity-sort'];
+                    $name_sort = $_POST['name-sort'];
                     // echo "category: $itemCategory <br>";
                     // echo "location: $itemLocation <br>";
                     // echo "comparison: $quantityComparison <br>";
                     // echo "number: $quantityNumber <br>";
                     // successful is a table with at least 1 result is returned
-                    $successful = display_inventory($itemCategory, $itemLocation, $quantityComparison, $quantityNumber, $quantitySort, $nameSort);
+                    $successful = display_inventory($item_category, $item_location, $quantity_comparison, $quantity_number, $quantity_sort, $name_sort);
                     if ($successful)
                         echo "<br><br><button onclick=printData()>Print Table</button>";
                 }

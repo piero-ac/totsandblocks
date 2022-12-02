@@ -129,10 +129,10 @@ require_once "../Models/category-db.php";
             </form>
         </div>
     </main>
-    <hr>
-    <?php
-    display_item_table();
-    ?>
+    <section id="display-item-sect">
+        <?php display_item_table(); ?>
+    </section>
+
 </body>
 
 </html>

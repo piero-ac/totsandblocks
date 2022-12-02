@@ -36,7 +36,6 @@ require_once "../Models/view-db.php";
     }
 
     $user_id = $_COOKIE['userID'];
-    include "../misc/dbconfig.php";
     ?>
 
     <a href='login.php'>Back to Homepage</a>

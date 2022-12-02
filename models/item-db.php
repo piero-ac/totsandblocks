@@ -240,8 +240,8 @@ function update_item_comment(string $item_code, string $current_item_comment, st
     global $con;
 
     if (!is_empty_input($new_item_comment) && strcmp($current_item_comment, $new_item_comment) != 0) {
-        $update_item_comment = "update totsandblocks.Item set itemDescription = '$new_item_comment' where itemCode = '$item_code'";
-        $update_result = mysqli_query($con, $update_item_comment);
+        $update_item_comment_sql = "update totsandblocks.Item set itemDescription = '$new_item_comment' where itemCode = '$item_code'";
+        $update_result = mysqli_query($con, $update_item_comment_sql);
         if ($update_result) {
             echo "<br>Updated Item Description.";
         } else {

@@ -66,7 +66,7 @@ The application is being built using:
 
 ## User Manual
 The User Manual will help the user learn how to use the application. 
-User Manual is located at the following link:
+User Manual is located at the following link and will be receiving updates until the end of the semester:
 https://docs.google.com/document/d/1aRXTmHYL4OCiGaI48OBdd4HlkO6NuMlemQbIzMV0-pM/edit 
 
 ## Credits

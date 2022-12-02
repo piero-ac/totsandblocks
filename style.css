@@ -162,3 +162,17 @@ html {
   align-items: top;
   justify-content: space-around;
 }
+
+#display-item-sect {
+  height: 400px;
+  overflow: auto;
+}
+
+#display-item-sect table {
+  height: 600px;
+  margin: 0 auto;
+}
+
+#display-item-sect th {
+  position: sticky;
+}

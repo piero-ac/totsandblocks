@@ -60,8 +60,8 @@ The application is being built using:
     1. totsandblocks is the name of folder, downloaded from the repo, and should be in the MAMP/htdocs folder
     2. Configured port number by default is 8888. Ex: http://localhost:8888/totsandblocks/
 2. Log in to the program:
-    * Username: pcoronado
-    * Password: test123
+    * Username: kbarvaliya
+    * Password: test12345
 3. You should now be logged in.
 
 ## User Manual

@@ -118,8 +118,8 @@ function insert_item_info(string $item_code, string $item_name, string $item_cat
  * @global mixed $con
  * @param string $item_code Item Code for item whose information will be updated
  * @param string $new_item_name New name for chosen item (optional)
- * @param string $item_category New category for chosen item (optional)
- * @param string $item_comment New comment (description) for chosen item (optional)
+ * @param string $new_item_category New category for chosen item (optional)
+ * @param string $new_item_comment New comment (description) for chosen item (optional)
  * @return boolean
  */
 function update_item_info(string $item_code, string $new_item_name, string $new_item_category, string $new_item_comment)
@@ -142,47 +142,113 @@ function update_item_info(string $item_code, string $new_item_name, string $new_
             $current_item_category = $item_row['itemCategory'];
             $current_item_comment = $item_row['itemDescription'];
 
-            // check if inputs are empty and if they're equal to the current item info
-            if (!is_empty_input($new_item_name) && strcmp($current_item_name, $new_item_name) != 0) {
-                $update_item_name = "update totsandblocks.Item set itemName = '$new_item_name' where itemCode = '$item_code'";
-                $update_result = mysqli_query($con, $update_item_name);
-                if ($update_result) {
-                    echo "<br>Updated Item Name.";
-                } else {
-                    echo "Something is wrong with updating item name SQL: " . mysqli_error($con);
-                }
-            } else {
-                echo "<br>Did not update item name.";
-            }
+            // Update item name function
+            update_item_name($item_code, $current_item_name, $new_item_name);
 
-            if (!is_empty_input($new_item_category) && strcmp($current_item_category, $new_item_category) != 0) {
-                $update_item_category = "update totsandblocks.Item set itemCategory = '$new_item_category' where itemCode = '$item_code'";
-                $update_result = mysqli_query($con, $update_item_category);
-                if ($update_result) {
-                    echo "<br>Updated Item Category.";
-                } else {
-                    echo "Something is wrong with updating item category SQL: " . mysqli_error($con);
-                }
-            } else {
-                echo "<br>Did not update item category.";
-            }
+            // Update item category function
+            update_item_category($item_code, $current_item_category, $new_item_category);
 
-            if (!is_empty_input($new_item_comment) && strcmp($current_item_comment, $new_item_comment) != 0) {
-                $update_item_comment = "update totsandblocks.Item set itemDescription = '$new_item_comment' where itemCode = '$item_code'";
-                $update_result = mysqli_query($con, $update_item_comment);
-                if ($update_result) {
-                    echo "<br>Updated Item Description.";
-                } else {
-                    echo "Something is wrong with updating item description SQL: " . mysqli_error($con);
-                }
-            } else {
-                echo "<br>Did not update item description.";
-            }
+            // Update item comment function
+            update_item_comment($item_code, $current_item_comment, $new_item_comment);
             return true;
         }
     } else {
         echo "Something wrong with getting current item's info SQL: " . mysqli_error($con);
         return false;
+    }
+}
+
+
+/**
+ * Update Item Name
+ * 
+ * Function will be used to update the item name of the passed in
+ * item code. Function will check if the input is empty (meaning do not update)
+ * and check if the current item name is the same as the updated item name (meaning do not update).
+ * If both of these are not true, then the item name will be updated.
+ *
+ * @global mixed $con
+ * @param string $item_code Item Code for item whose information will be updated
+ * @param string $current_item_name Current item name for the item code
+ * @param string $new_item_name New name for chosen item (optional)
+ * @return void
+ */
+function update_item_name(string $item_code, string $current_item_name, string $new_item_name)
+{
+    global $con;
+
+    if (!is_empty_input($new_item_name) && strcmp($current_item_name, $new_item_name) != 0) {
+        $update_item_name_sql = "update totsandblocks.Item set itemName = '$new_item_name' where itemCode = '$item_code'";
+        $update_result = mysqli_query($con, $update_item_name_sql);
+        if ($update_result) {
+            echo "<br>Updated Item Name.";
+        } else {
+            echo "Something is wrong with updating item name SQL: " . mysqli_error($con);
+        }
+    } else {
+        echo "<br>Did not update item name.";
+    }
+}
+
+/**
+ * Update Item Category
+ * 
+ * Function will be used to update the item category of the passed in
+ * item code. Function will check if the input is empty (meaning do not update)
+ * and check if the current item category is the same as the updated item category (meaning do not update).
+ * If both of these are not true, then the item category will be updated.
+ *
+ * @global mixed $con
+ * @param string $item_code Item Code for item whose information will be updated
+ * @param string $current_item_category Current item category for the item code
+ * @param string $new_item_category New category for chosen item (optional)
+ * @return void
+ */
+function update_item_category(string $item_code, string $current_item_category, string $new_item_category)
+{
+    global $con;
+
+    if (!is_empty_input($new_item_category) && strcmp($current_item_category, $new_item_category) != 0) {
+        $update_item_category_sql = "update totsandblocks.Item set itemCategory = '$new_item_category' where itemCode = '$item_code'";
+        $update_result = mysqli_query($con, $update_item_category_sql);
+        if ($update_result) {
+            echo "<br>Updated Item Category.";
+        } else {
+            echo "Something is wrong with updating item category SQL: " . mysqli_error($con);
+        }
+    } else {
+        echo "<br>Did not update item category.";
+    }
+}
+
+/**
+ * Update Item Comment
+ * 
+ * Function will be used to update the item comment of the passed in
+ * item code. Function will check if the input is empty (meaning do not update)
+ * and check if the current item comment is the same as the updated item comment (meaning do not update).
+ * If both of these are not true, then the item comment will be updated.
+ *
+ * @global mixed $con
+ * @param string $item_code Item Code for item whose information will be updated
+ * @param string $current_item_comment Current item comment for the item code
+ * @param string $new_item_comment New comment for chosen item (optional)
+ * @return void
+ */
+function update_item_comment(string $item_code, string $current_item_comment, string $new_item_comment)
+{
+    global $con;
+
+    if (!is_empty_input($new_item_comment) && strcmp($current_item_comment, $new_item_comment) != 0) {
+        $update_item_comment = "update totsandblocks.Item set itemDescription = '$new_item_comment' where itemCode = '$item_code'";
+        $update_result = mysqli_query($con, $update_item_comment);
+        if ($update_result) {
+            echo "<br>Updated Item Description.";
+        } else {
+            echo "Something is wrong with updating item description SQL: " . mysqli_error($con);
+        }
+    } else {
+        echo "<br>Did not update item description.";
     }
 }
 

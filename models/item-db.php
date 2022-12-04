@@ -309,9 +309,9 @@ function display_item_table()
         if ($num_items == 0) {
             echo "No items in Item table.";
         } else {
-            echo "<table border=1>";
+            echo "<table border=1 class='content-table'>";
+            echo "<thead><tr class='header'><th>Item Code</th><th>Item Name</th><th>Category</th><th>Comment</th><th>Added By</th><tr></thead>";
             echo "<tbody>";
-            echo "<tr><th>Item Code</th><th>Item Name</th><th>Category</th><th>Comment</th><th>Added By</th><tr>";
 
             while ($items_row = mysqli_fetch_array($items_results)) {
                 $item_code = $items_row['itemCode'];

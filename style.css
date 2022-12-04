@@ -3,6 +3,11 @@ html {
   font-family: 'Open Sans', sans-serif;
 }
 
+body {
+  padding: 0;
+  margin: 0;
+}
+
 #login-body {
   background-color: #68adfd;
   display: flex;
@@ -163,8 +168,14 @@ html {
   justify-content: space-around;
 }
 
+#display-item-div {
+  display: flex;
+  justify-content: center;
+
+}
+
 #display-item-sect {
-  height: 400px;
+  height: 450px;
   overflow: auto;
 }
 
@@ -173,6 +184,55 @@ html {
   margin: 0 auto;
 }
 
-#display-item-sect th {
+
+.content-table {
+  /* position: absolute; */
+  border-collapse: collapse;
+  /* left: 5%; */
+  width: 800px;
+  height: 200px;
+  border: 1px solid #90db75;
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2), -1px -1px 8px rgba(0, 0, 0, 0.2);
+  margin: 30px 0;
+  font-size: 0.9em;
+  min-width: 400px;
+}
+
+.content-table thead tr {
+  /* transition: all .2s ease-in; */
+  background-color: #90db75;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+/* tr:hover {
+  background-color: #f3f3f3;
+  transform: scale(1.02);
+  box-shadow: 2px 2px 12px rgba(0, 0, 0, 0.2), -1px -1px 8px rgba(0, 0, 0, 0.2);
+} */
+
+@media only screen and (max-width:840px) {
+  .content-table {
+    width: 90%;
+  }
+}
+
+.content-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+thead th {
   position: sticky;
+  top: 0;
+  background-color: #90db75;
+  color: white;
+  text-align: center;
+  font-weight: bold;
 }

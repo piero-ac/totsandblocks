@@ -1,14 +1,14 @@
-html {
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.html-reset {
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
 }
 
-body {
-  padding: 0;
-  margin: 0;
-}
-
-#login-body {
+.login-body {
   background-color: #68adfd;
   display: flex;
   justify-content: center;
@@ -72,39 +72,41 @@ body {
   font-weight: 700;
 }
 
+.input {
+  padding: 10px;
+}
+
 .input-box {
   position: relative;
   width: 200px;
-  margin-bottom: 20px;
+  padding: 18px;
 }
 
-.input-box {
+.input-data .input-box {
   position: relative;
+  height: 10px;
   width: 100%;
-  padding: 5px 5px 5px;
-  background: transparent;
-  outline: none;
-  border: thick double #358efa;
-  color: #358efa;
-  font-size: 1em;
-  letter-spacing: 0.05em;
+  border: none;
+  border-bottom: 2px solid silver;
+  font-size: 17px;
 }
 
-.input-box span {
-  position: absolute;
-  left: 0;
-  padding: 20px 10px 10px;
-  color: #358efa;
-  pointer-events: none;
-  letter-spacing: 0.5em;
-  transition: 0.5s;
-}
-
-.input-box input:valid~label,
-.input-box input:focus~label {
+.input-data input:valid~label,
+.input-data input:focus~label {
   color: #0e77f8;
-  transform: translateY(-35px);
-  font-size: .75em;
+  transform: translateY(-48px);
+  font-size: 17px;
+}
+
+.input-data label {
+  position: relative;
+  bottom: 20px;
+  left: 0;
+  color: grey;
+  pointer-events: none;
+  display: flex;
+  text-align: none;
+  transition: all 0.3s ease;
 }
 
 .login-btn {
@@ -167,6 +169,152 @@ body {
   align-items: top;
   justify-content: space-around;
 }
+
+/*THIS IS THE END OF INDEX.HTML STYLING*/
+
+/* Login .php styling start*/
+
+.heading {
+  color: white;
+  font-size: 15px;
+  text-align: center;
+}
+
+.left, .center, .right {
+  width: 30.3333333%;
+  height: fit-content;
+  margin: 0 1.5%;
+  float: left;
+  text-align: center;
+  padding: 0px, 50px;
+  box-sizing: border-box;
+  background-color: white;
+  padding: 15px 25px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.left {
+  border-radius: 25% 10%;
+  box-shadow: -12px 5px 5px #358efa;
+}
+
+.center {
+  border-radius: 25px;
+  box-shadow: 1px 5px 5px #358efa;
+}
+
+.right {
+  border-radius: 10% 25%;
+  box-shadow: 12px 5px 5px #358efa;
+}
+
+.center .extra {
+  font-size: small;
+}
+
+.center .view-tab {
+  width: 100%;
+}
+
+.submit-btn {
+  font-size: small;
+  font-weight: bold;
+  background-color: #358efa;
+  width: auto;
+  height: auto;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: white;
+  border-radius: 5px;
+  border-color: #90db75;
+  cursor: pointer;
+  box-shadow: 0 0 10px #90db75;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: box-shadow, transform;
+  transition-property: box-shadow, transform;
+}
+
+.submit-btn:hover, .submit-btn:focus, .submit-btn:active {
+  box-shadow: 0 0 20px #90db75;
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+.head-body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Open Sans', sans-serif;
+}
+
+.head-body {
+  background-color: #68adfd;
+}
+
+.nav-container {
+  width: 100%;
+  background-color: #90db75;
+}
+
+.navbar {
+  display: grid;
+  grid-template-columns: 0.2fr auto 1fr;
+  align-items: center;
+  height: 90%;
+  width: 90%;
+  max-width: 1720px;
+  margin: 0 auto;
+}
+
+.navbar-logo {
+  color: #68adfd;
+  justify-self: start;
+  margin-left: 20px;
+}
+
+.navbar-logo {
+  cursor: pointer;
+}
+
+.nav-menu {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  list-style: none;
+  text-align: center;
+  width: 70%;
+  justify-self: end;
+}
+
+.nav-links {
+  color: white;
+  text-decoration: none;
+}
+
+.nav-links:hover {
+  color: #68adfd;
+  transition: all 0.2s ease-out;
+}
+
+.nav-links-btn {
+  background-color: #68adfd;
+  padding: 6px 16px;
+  border-radius: 4px;
+}
+
+.nav-links-btn:hover {
+  background-color: transparent;
+  color: red;
+  padding: 5px 15px;
+  border-radius: 4px;
+  border: solid 1px red;
+  transition: all 0.3s ease-out;
+}
+
 
 #display-item-div {
   display: flex;

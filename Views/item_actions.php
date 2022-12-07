@@ -143,8 +143,9 @@ require_once "../Models/category-db.php";
                 ?>
             </form>
         </div>
+
     </div>
-    <section id="display-item-sect" style="border: 1px solid black;">
+    <section id="display-item-sect">
         <div id="display-item-div">
             <?php display_item_table(); ?>
         </div>

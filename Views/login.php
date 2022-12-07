@@ -1,3 +1,7 @@
+<?php
+// Provides the database login
+require_once "../misc/dbconfig.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,13 +9,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700">
+    <link rel="stylesheet" href="../style.css">
     <title>Tots and Blocks IMS</title>
 </head>
 
 <body>
     <?php
-    include "../misc/dbconfig.php";
-
     // connection to database
     $con = mysqli_connect($host, $username, $password, $dbname)
         or die("<br>Cannot connect to DB:$dbname on $host, error: " . mysqli_connect_errno());
@@ -20,9 +24,6 @@
     // check if user is already logged in
     if (isset($_COOKIE['userID'])) {
         $user_id = $_COOKIE['userID'];
-
-        ##### Logout Function #####
-        echo "<a href='logout.php'>User Logout</a><br>";
 
         #####  Set cookie for user #####
         setcookie('userID', $user_id, time() + 3600);
@@ -35,7 +36,7 @@
         $position = $user_row['position'];
 
         // display homepage
-        displayHomepage($name, $position);
+        displayHomepage($name);
     } else {
         // Get the user's username and password
         // Check if they have entered username and password
@@ -65,9 +66,6 @@
                 $user_password = $user_row['password'];
                 if ($user_password == $pass) {
 
-                    ##### Logout Function #####
-                    echo "<a href='logout.php'>User Logout</a><br>";
-
                     ##### Get user id #####
                     $user_id = $user_row['userID'];
 
@@ -81,7 +79,7 @@
                     $position = $user_row['position'];
 
                     ##### Display user info #####
-                    displayHomepage($name, $position);
+                    displayHomepage($name);
                 } else {
                     echo "<h1>Login $user exists, but password does not match</h1>"; // 1.3
                 }
@@ -92,40 +90,55 @@
     }
     ?>
     <?php
-    function displayHomepage($name, $position)
+    function displayHomepage($name)
     {
-        ##### Display user info #####
-        echo "<h2>Welcome $name </h2>";
-        echo "<p>Position: $position </p>";
-        echo "<hr />";
         echo <<<HTML
-        <main id="actions">
-            <section id="stock-actions">
-                <h2>Manage Stock</h2>
-                <p>Click below to Search or Update Stock Information</p>
+        <div class="head-body">
+            <div class="nav-container">
+                <nav class="navbar">
+                    <h1 class="navbar-logo">Tots and Blocks IMS</h1>
+                    <div class="menu-toggle">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </div>
+                    <ul class="nav-menu">
+                        <li><a href="./login.php" class="nav-links">Home</a></li>
+                        <li><a href="./stock_actions.php" class="nav-links">Manage Stock</a></li>
+                        <li><a href="./item_actions.php" class="nav-links">Manage Items</a></li>
+                        <li><a href="./view_actions.php" class="nav-links">View Inventory</a></li>
+                        <li><a href="./logout.php" class="nav-links nav-links-btn">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="login-body">
+            <div class="left">
+                <h2 class="panel-title">Manage Stock</h2>
+                <p class="panel-disc">Click below to Search or Update Stock Information</p>
                 <form action="./stock_actions.php" method="POST">
                     <input type="hidden" name="customer_name" value="$name">
-                    <input type="submit" value="Manage Stock">
+                    <input class="submit-btn" type="submit" value="Manage Stock">
                 </form>
-            </section>
-            <section id="items-actions">
-                <h2>Manage Items</h2>
-                <p>Click below to Add or Delete Items</p>
-                <p>*Items need to be added before entering the items stock information*</p>
+            </div>
+            <div class="center">
+                <h2 class="panel-title">Manage Items</h2>
+                <p class="panel-disc">Click below to Add or Delete Items</p>
+                <p class="extra">*Items need to be added before entering the items stock information*</p>
                 <form action="./item_actions.php" method="POST">
                     <input type="hidden" name="customer_name" value="$name">
-                    <input type="submit" value="Manage Items">
+                    <input class="submit-btn" type="submit" value="Manage Items">
                 </form>
-            </section>
-            <section id="view-actions">
-                <h2>View Inventory Information</h2>
-                <p>Click below to View Inventory by Category, Location, etc</p>
+            </div>
+            <div class="right">
+                <h2 class="panel-title">View Inventory Information</h2>
+                <p class="panel-disc">Click below to View Inventory by Category, Location, etc</p>
                 <form action="./view_actions.php">
                     <input type="hidden" name="customer_name" value="$name">
-                    <input type="submit" value="View Inventory">
+                    <input class="submit-btn" type="submit" value="View Inventory">
                 </form>
-            </section>
-        </main>
+            </div>
+        </div>
     HTML;
     }
     mysqli_close($con);

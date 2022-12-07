@@ -8,13 +8,14 @@ require_once "../Models/category-db.php";
 
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html class="html-reset" lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Items</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700">
     <link rel="stylesheet" type="text/css" href="../style.css">
 </head>
 
@@ -28,12 +29,28 @@ require_once "../Models/category-db.php";
     $user_id = $_COOKIE['userID'];
 
     ?>
-    <a href='login.php'>Back to Homepage</a>
-    <h1>Manage Items*</h1>
-    <hr>
-    <main id="items-main" class="side-by-side">
-        <div class="add-items-ctn">
-            <h2>Add Item</h2>
+    <div class="head-body">
+        <div class="nav-container">
+            <nav class="navbar">
+                <h1 class="navbar-logo">Tots and Blocks IMS</h1>
+                <div class="menu-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="./login.php" class="nav-links">Home</a></li>
+                    <li><a href="./stock_actions.php" class="nav-links">Manage Stock</a></li>
+                    <li><a href="./item_actions.php" class="nav-links">Manage Items</a></li>
+                    <li><a href="./view_actions.php" class="nav-links">View Inventory</a></li>
+                    <li><a href="./logout.php" class="nav-links nav-links-btn">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="login-body">
+        <div class="left">
+            <h2 class="panel-title">Add Item</h2>
             <!-- ADD ITEMS FORM -->
             <form name='add_item' method='POST'>
                 <p>Item Code:
@@ -50,8 +67,8 @@ require_once "../Models/category-db.php";
                     </select>
                 </p>
                 <p>Comment (Optional):</p>
-                <p><textarea name="item_comment" cols="30" rows="10"></textarea></p>
-                <p><input type="submit" value="Add Item"></p>
+                <p><textarea name="item_comment" cols="23" rows="10"></textarea></p>
+                <p><input class="submit-btn" type="submit" value="Add Item"></p>
                 <?php
                 if (isset($_POST['item_code'], $_POST['item_name'], $_POST['item_category'])) {
                     $item_code = $_POST['item_code'];
@@ -64,8 +81,8 @@ require_once "../Models/category-db.php";
                 ?>
             </form>
         </div>
-        <div class="update-items-ctn">
-            <h2>Update Item</h2>
+        <div class="center">
+            <h2 class="panel-title">Update Item</h2>
             <form name='update_item' method='POST'>
                 <p>Item Name:
                     <select name="item_update" id="" required>
@@ -87,8 +104,8 @@ require_once "../Models/category-db.php";
                     </select>
                 </p>
                 <p>New Comment:</p>
-                <p><textarea name="new_item_comment" cols="30" rows="10"></textarea></p>
-                <p><input type="submit" value="Update Item" name="btnSubmitUpdate"></p>
+                <p><textarea name="new_item_comment" cols="23" rows="10"></textarea></p>
+                <p><input class="submit-btn" type="submit" value="Update Item" name="btnSubmitUpdate"></p>
                 <?php
                 if (isset($_POST['btnSubmitUpdate'])) {
                     $item_code_to_update = $_POST['item_update'];
@@ -105,8 +122,8 @@ require_once "../Models/category-db.php";
                 ?>
             </form>
         </div>
-        <div class="delete-items-ctn">
-            <h2>Delete Item</h2>
+        <div class="right">
+            <h2 class="panel-title">Delete Item</h2>
             <!-- DELETE ITEMS FORM -->
             <form name='delete_item' method='POST'>
                 <p>Item Name:
@@ -117,23 +134,20 @@ require_once "../Models/category-db.php";
                         ?>
                     </select>
                 </p>
-                <p><input type="submit" value="Delete Item" name="btnSubmitDelete"></p>
+                <p><input class="submit-btn" type="submit" value="Delete Item" name="btnSubmitDelete"></p>
                 <?php
                 if (isset($_POST['btnSubmitDelete'])) {
                     $item_code_to_delete = $_POST['item_delete'];
                     delete_item_info($item_code_to_delete);
                 }
-
                 ?>
-                </p>
             </form>
         </div>
-    </main>
+    </div>
     <section id="display-item-sect" style="border: 1px solid black;">
         <div id="display-item-div">
             <?php display_item_table(); ?>
         </div>
-
     </section>
 
 </body>

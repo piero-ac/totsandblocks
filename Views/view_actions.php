@@ -15,6 +15,8 @@ require_once "../Models/view-db.php";
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700">
+    <link rel="stylesheet" href="../style.css">
     <title>View/Print Inventory</title>
     <script>
         function printData() {
@@ -38,11 +40,28 @@ require_once "../Models/view-db.php";
     $user_id = $_COOKIE['userID'];
     ?>
 
-    <a href='login.php'>Back to Homepage</a>
-    <h1>View/Print Inventory*</h1>
-    <hr>
-    <main id="view-main">
-        <div class="search-inventory-ctn">
+    <div class="head-body">
+        <div class="nav-container">
+            <nav class="navbar">
+                <h1 class="navbar-logo">Tots and Blocks IMS</h1>
+                <div class="menu-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="./login.php" class="nav-links">Home</a></li>
+                    <li><a href="./stock_actions.php" class="nav-links">Manage Stock</a></li>
+                    <li><a href="./item_actions.php" class="nav-links">Manage Items</a></li>
+                    <li><a href="./view_actions.php" class="nav-links">View Inventory</a></li>
+                    <li><a href="./logout.php" class="nav-links nav-links-btn">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="login-body">
+        <div class="center view-tab">
+            <h2 class="panel-title">View/Print Inventory</h2>
             <form name="search_items" method="POST">
                 <p>
                     <label for="category"> Category:
@@ -107,7 +126,7 @@ require_once "../Models/view-db.php";
                         Descending
                     </label>
                 </p>
-                <p><input type="submit" value="Search" name="btnSearch"></p>
+                <p><input class="submit-btn" type="submit" value="Search" name="btnSearch"></p>
                 <?php
                 if (isset($_POST['btnSearch'])) {
                     $item_category = $_POST['item_category'];
@@ -123,12 +142,13 @@ require_once "../Models/view-db.php";
                     // successful is a table with at least 1 result is returned
                     $successful = display_inventory($item_category, $item_location, $quantity_comparison, $quantity_number, $quantity_sort, $name_sort);
                     if ($successful)
-                        echo "<br><br><button onclick=printData()>Print Table</button>";
+                        echo "<br><br><button class='submit-btn' onclick=printData()>Print Table</button>";
                 }
                 ?>
             </form>
         </div>
-    </main>
+
+    </div>
 </body>
 
 </html>

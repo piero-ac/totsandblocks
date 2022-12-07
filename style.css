@@ -323,11 +323,13 @@ html, body {
 }
 
 #display-item-sect {
+  background-color: #68adfd;
   height: 450px;
   overflow: auto;
 }
 
 #display-item-sect table {
+  background-color: white;
   height: 600px;
   margin: 0 auto;
 }

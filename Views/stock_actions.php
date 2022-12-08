@@ -50,7 +50,7 @@ require_once "../Models/location-db.php";
     </div>
     <div class="login-body">
         <div class="left">
-            <h2 class="panel-title">Insert New item Stock Information</h2>
+            <h2 class="panel-title">Insert Item Stock</h2>
             <form name="insert_item_stockinfo" method="POST">
                 <p>Item Name:
                     <select name="item_insert_code" required>
@@ -83,7 +83,7 @@ require_once "../Models/location-db.php";
             </form>
         </div>
         <div class="center">
-            <h2 class="panel-title">Update Item Quantity</h2>
+            <h2 class="panel-title">Update Item Stock</h2>
             <form name="update-itemquantity" method="POST">
                 <p>Item Name:
                     <select name="item_update_code" required>
@@ -128,7 +128,7 @@ require_once "../Models/location-db.php";
             </form>
         </div>
         <div class="right">
-            <h2 class="panel-title">Delete Item Stock Information</h2>
+            <h2 class="panel-title">Delete Item Stock</h2>
             <form name="delete-itemstockinfo" method="POST">
                 <p>Item Name:
                     <select name="item_delete_code" required>
@@ -157,8 +157,11 @@ require_once "../Models/location-db.php";
             </form>
         </div>
     </div>
-    <hr>
-    <?php display_quantity_table(); ?>
+    <section id="display-item-sect">
+        <div id="display-item-div">
+            <?php display_quantity_table(); ?>
+        </div>
+    </section>
 </body>
 
 </html>

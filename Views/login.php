@@ -115,7 +115,7 @@ require_once "../misc/dbconfig.php";
         <div class="login-body">
             <div class="left">
                 <h2 class="panel-title">Manage Stock</h2>
-                <p class="panel-disc">Click below to Search or Update Stock Information</p>
+                <p class="panel-disc">Insert, Update, Delete Stock Information</p>
                 <form action="./stock_actions.php" method="POST">
                     <input type="hidden" name="customer_name" value="$name">
                     <input class="submit-btn" type="submit" value="Manage Stock">
@@ -123,8 +123,8 @@ require_once "../misc/dbconfig.php";
             </div>
             <div class="center">
                 <h2 class="panel-title">Manage Items</h2>
-                <p class="panel-disc">Click below to Add or Delete Items</p>
-                <p class="extra">*Items need to be added before entering the items stock information*</p>
+                <p class="panel-disc">Insert, Update, Delete Item Information</p>
+                <p class="extra">*Items need to be added before inserting it's stock information*</p>
                 <form action="./item_actions.php" method="POST">
                     <input type="hidden" name="customer_name" value="$name">
                     <input class="submit-btn" type="submit" value="Manage Items">
@@ -132,7 +132,7 @@ require_once "../misc/dbconfig.php";
             </div>
             <div class="right">
                 <h2 class="panel-title">View Inventory Information</h2>
-                <p class="panel-disc">Click below to View Inventory by Category, Location, etc</p>
+                <p class="panel-disc">View Inventory & Print Reports</p>
                 <form action="./view_actions.php">
                     <input type="hidden" name="customer_name" value="$name">
                     <input class="submit-btn" type="submit" value="View Inventory">

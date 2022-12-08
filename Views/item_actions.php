@@ -67,7 +67,7 @@ require_once "../Models/category-db.php";
                     </select>
                 </p>
                 <p>Comment (Optional):</p>
-                <p><textarea name="item_comment" cols="23" rows="10"></textarea></p>
+                <p><textarea name="item_comment" cols="23" rows="10" maxlength="50"></textarea></p>
                 <p><input class="submit-btn" type="submit" value="Add Item"></p>
                 <?php
                 if (isset($_POST['item_code'], $_POST['item_name'], $_POST['item_category'])) {
@@ -104,7 +104,7 @@ require_once "../Models/category-db.php";
                     </select>
                 </p>
                 <p>New Comment:</p>
-                <p><textarea name="new_item_comment" cols="23" rows="10"></textarea></p>
+                <p><textarea name="new_item_comment" cols="23" rows="10" maxlength="50"></textarea></p>
                 <p><input class="submit-btn" type="submit" value="Update Item" name="btnSubmitUpdate"></p>
                 <?php
                 if (isset($_POST['btnSubmitUpdate'])) {

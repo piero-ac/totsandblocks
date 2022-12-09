@@ -54,6 +54,11 @@ function display_inventory(string $item_category, string $item_location, string 
 {
     global $con;
 
+    // cleanse inputs
+    $item_category = mysqli_real_escape_string($con,  $item_category);
+    $item_location = mysqli_real_escape_string($con, $item_location);
+    $quantity_number = mysqli_real_escape_string($con, $quantity_number);
+
     $view_sql = get_inventory_query($item_category, $item_location);
 
     // Add having clause for quantiy filtering

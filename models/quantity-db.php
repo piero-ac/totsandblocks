@@ -58,6 +58,11 @@ function insert_item_stock(string $item_code, string $item_location, string $ite
 {
     global $con;
 
+    // cleanse inputs
+    $item_code = mysqli_real_escape_string($con, $item_code);
+    $item_location = mysqli_real_escape_string($con, $item_location);
+    $item_quantity = mysqli_real_escape_string($con, $item_quantity);
+
     if (!is_numeric($item_quantity)) {
         echo "Quantity is not a number. Did not insert.";
         return false;
@@ -89,6 +94,10 @@ function insert_item_stock(string $item_code, string $item_location, string $ite
 function item_stock_info_exists(string $item_code, string $item_location)
 {
     global $con;
+
+    // cleanse inputs
+    $item_code = mysqli_real_escape_string($con, $item_code);
+    $item_location = mysqli_real_escape_string($con, $item_location);
 
     $check_sql = "select * from totsandblocks.Quantity where itemCode = '$item_code' and locationID = '$item_location'";
     $check_results = mysqli_query($con, $check_sql);
@@ -124,6 +133,12 @@ function item_stock_info_exists(string $item_code, string $item_location)
 function update_item_stock(string $item_code, string $item_location, string $item_quantity, string $action)
 {
     global $con;
+
+    // cleanse inputs
+    $item_code = mysqli_real_escape_string($con, $item_code);
+    $item_location = mysqli_real_escape_string($con, $item_location);
+    $item_quantity = mysqli_real_escape_string($con, $item_quantity);
+
     $item_quantity = (int)$item_quantity;
     $currentQuantity = get_current_quantity($item_code, $item_location);
     if ($currentQuantity == -1) {
@@ -167,6 +182,10 @@ function update_item_stock(string $item_code, string $item_location, string $ite
 function get_current_quantity(string $item_code, string $item_location)
 {
     global $con;
+
+    // cleanse inputs
+    $item_code = mysqli_real_escape_string($con, $item_code);
+    $item_location = mysqli_real_escape_string($con, $item_location);
 
     $sql = "select quantity from totsandblocks.Quantity where itemCode = '$item_code' and locationID = '$item_location'";
     $sql_result = mysqli_query($con, $sql);
@@ -212,6 +231,10 @@ function greater_than_current_quantity(string $item_code, string $item_location,
 function delete_item_stock(string $item_code, string $item_location)
 {
     global $con;
+
+    // cleanse inputs
+    $item_code = mysqli_real_escape_string($con, $item_code);
+    $item_location = mysqli_real_escape_string($con, $item_location);
 
     $sql = "delete from totsandblocks.Quantity where itemCode = '$item_code' and locationID = '$item_location'";
     $sql_result = mysqli_query($con, $sql);

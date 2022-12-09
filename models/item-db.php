@@ -89,6 +89,12 @@ function insert_item_info(string $item_code, string $item_name, string $item_cat
 {
     global $con;
 
+    // cleanse inputs
+    $item_code = mysqli_real_escape_string($con, $item_code);
+    $item_name = mysqli_real_escape_string($con, $item_name);
+    $item_category = mysqli_real_escape_string($con, $item_category);
+    $item_comment = mysqli_real_escape_string($con, $item_comment);
+
     // check if item code is not duplicated or amount entered is not valid input
     if (is_duplicate_code($item_code)) {
         echo "<p style='color:red'>Did not insert item. Duplicate item code.</p>";
@@ -125,6 +131,12 @@ function insert_item_info(string $item_code, string $item_name, string $item_cat
 function update_item_info(string $item_code, string $new_item_name, string $new_item_category, string $new_item_comment)
 {
     global $con;
+
+    // cleanse inputs
+    $item_code = mysqli_real_escape_string($con, $item_code);
+    $new_item_name = mysqli_real_escape_string($con, $new_item_name);
+    $new_item_category = mysqli_real_escape_string($con, $new_item_category);
+    $new_item_comment = mysqli_real_escape_string($con, $new_item_comment);
 
     // get the current information of the item
     $current_item_info_sql = "select * from totsandblocks.Item where itemCode = '$item_code'";
@@ -177,6 +189,11 @@ function update_item_name(string $item_code, string $current_item_name, string $
 {
     global $con;
 
+    // cleanse inputs
+    $item_code = mysqli_real_escape_string($con, $item_code);
+    $current_item_name = mysqli_real_escape_string($con, $current_item_name);
+    $new_item_name = mysqli_real_escape_string($con, $new_item_name);
+
     if (!is_empty_input($new_item_name) && strcmp($current_item_name, $new_item_name) != 0) {
         $update_item_name_sql = "update totsandblocks.Item set itemName = '$new_item_name' where itemCode = '$item_code'";
         $update_result = mysqli_query($con, $update_item_name_sql);
@@ -207,6 +224,11 @@ function update_item_name(string $item_code, string $current_item_name, string $
 function update_item_category(string $item_code, string $current_item_category, string $new_item_category)
 {
     global $con;
+
+    // cleanse inputs
+    $item_code = mysqli_real_escape_string($con, $item_code);
+    $current_item_category = mysqli_real_escape_string($con, $current_item_category);
+    $new_item_category = mysqli_real_escape_string($con, $new_item_category);
 
     if (!is_empty_input($new_item_category) && strcmp($current_item_category, $new_item_category) != 0) {
         $update_item_category_sql = "update totsandblocks.Item set itemCategory = '$new_item_category' where itemCode = '$item_code'";
@@ -239,6 +261,11 @@ function update_item_comment(string $item_code, string $current_item_comment, st
 {
     global $con;
 
+    // cleanse inputs
+    $item_code = mysqli_real_escape_string($con, $item_code);
+    $current_item_comment = mysqli_real_escape_string($con, $current_item_comment);
+    $new_item_comment = mysqli_real_escape_string($con, $new_item_comment);
+
     if (!is_empty_input($new_item_comment) && strcmp($current_item_comment, $new_item_comment) != 0) {
         $update_item_comment_sql = "update totsandblocks.Item set itemDescription = '$new_item_comment' where itemCode = '$item_code'";
         $update_result = mysqli_query($con, $update_item_comment_sql);
@@ -269,6 +296,9 @@ function update_item_comment(string $item_code, string $current_item_comment, st
 function delete_item_info(string $item_code)
 {
     global $con;
+
+    // cleanse inputs
+    $item_code = mysqli_real_escape_string($con, $item_code);
 
     // Check if $item_code exists in Quantity table
     if (item_code_exist($item_code)) {

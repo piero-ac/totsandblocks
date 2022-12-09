@@ -214,7 +214,7 @@ function get_current_quantity(string $item_code, string $item_location)
 function greater_than_current_quantity(string $item_code, string $item_location, string $quantity_to_delete)
 {
     $current_quantity = get_current_quantity($item_code, $item_location);
-    return $quantity_to_delete >= $current_quantity;
+    return $quantity_to_delete > $current_quantity;
 }
 
 /**

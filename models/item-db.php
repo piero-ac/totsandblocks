@@ -95,6 +95,12 @@ function insert_item_info(string $item_code, string $item_name, string $item_cat
     $item_category = mysqli_real_escape_string($con, $item_category);
     $item_comment = mysqli_real_escape_string($con, $item_comment);
 
+    // check if item code contains spaces
+    if (strpos($item_code, ' ') !== false) {
+        echo "<p style='color:red'>Did not insert item. Item code contains one or more spaces.</p>";
+        return false;
+    }
+
     // check if item code is not duplicated or amount entered is not valid input
     if (is_duplicate_code($item_code)) {
         echo "<p style='color:red'>Did not insert item. Duplicate item code.</p>";
